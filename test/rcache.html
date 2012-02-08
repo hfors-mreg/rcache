@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>rcache testsuite</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">
+    <script type="text/javascript" src="https://raw.github.com/appendto/jquery-mockjax/master/jquery.mockjax.js"></script>
+
+    <script type="text/javascript" src="../jquery.rcache.min.js"></script>
+
+    <script>
+        //Setting up mockjax
+        $(document).ready(function(){
+        
+            //A conditional counter resource
+            var counter = 0;
+            $.mockjax({
+                type: 'GET',
+                url: '/rcache/counter',
+                dataType: 'text/plain',
+                response: function(settings) {
+                    var ifNoMatch = settings.headers['If-None-Match'];
+                    if ( ifNoMatch == 'blabla' ) {
+                        //Not modified
+                        this.status = 304;
+                        return;
+                    }
+                    this.responseText = counter++;
+                },
+                headers: {
+                    ETag: 'blabla'
+                }
+            });
+
+            //A unconditional counter resource
+            var counter2 = 0;
+            $.mockjax({
+                type: 'GET',
+                url: '/rcache/counter2',
+                dataType: 'text/plain',
+                response: function(settings) {
+                    this.responseText = counter2++;
+                }
+            });
+
+            //An updatable resource
+            var putpage = '';
+            $.mockjax({
+                url: '/rcache/putable',
+                dataType: 'text/plain',
+                response: function(settings) {
+                    if ( settings.type == 'PUT' ) {
+                        putpage = settings.data;
+                        this.responseText = putpage;
+                    } else if ( settings.type == 'DELETE' ) {
+                        putpage = '';
+                    } else {
+                        if ( putpage == '' ) {
+                            this.status = 404;
+                        } else {
+                            this.responseText = putpage;
+                        }
+                    }
+                    
+                }
+            });
+
+            //A domain in wich pages can be created
+            var postmap = {};
+            $.mockjax({
+                type: 'GET',
+                url: '/rcache/postable/*',
+                dataType: 'text/plain',
+                response: function(settings) {
+                    if ( postmap[settings.url] ) {
+                        this.responseText = postmap[settings.url];
+                    } else {
+                        this.status = 404;
+                    }
+                }
+            });
+            $.mockjax({
+                type: 'POST',
+                url: '/rcache/postable',
+                dataType: 'text/plain',
+                response: function(settings) {
+                    var addr = '/rcache/postable/' + Math.random();
+                    postmap[addr] = settings.data;
+                    this.responseText = postmap[addr]; 
+                    this.headers = {
+                        'Content-Location': addr
+                    };            
+                }
+            });
+            
+        });
+    </script>
+
+    <script>
+        //The actual tests
+        $(document).ready(function(){
+
+
+            module("Basic read/write");
+
+            test("Cache size", function() {
+                equal($.rcache.count(), 0, "We expect the initial size to be 0");
+
+                $.rcache.item('customKey').write({foo: 'cached content', bar: 'bar'});
+                equal($.rcache.count(), 1, "After one write");
+
+                $.rcache.item('customKey1').write({foo: 'foo', bar: 'bar'});
+                equal($.rcache.count(), 2, "After two writes");
+
+                $.rcache.item('customKey1').remove();
+                equal($.rcache.count(), 1, "After one remove");
+            });
+
+            test("Reading from cache", function() {
+                var flag = $.rcache.has('customKey');
+                ok(flag, "Key customKey should be in cache");
+
+                var flag = $.rcache.has('customKey1');
+                ok(!flag, "Key customKey1 should not be in cache");
+
+                var data = $.rcache.item('customKey1').data;
+                ok(!data, "CustomKey1 should contaion no content");
+
+                var data = $.rcache.item('customKey').data.foo;
+                equal(data, 'cached content', "Content should be as inserted");
+            });
+
+            test("Clearing cache", function() {
+                $.rcache.clear();
+                equal($.rcache.count(), 0, "Should be empty after clear()");
+            });
+
+
+            module("Ajax");
+
+            test("Synchronous GET", function() {
+                var req = $.rcache.item('/rcache/counter').get({async:false});
+                req.done(function(data){
+                    equal(data, '0', "First get of counter should be 0");
+                    $.rcache.clear();
+                });
+            });
+
+            asyncTest('Asynchronous GET', function(){
+                equal($.rcache.count(), 0, 'Cache size should be empty');
+                var req1 = $.rcache.item('/rcache/counter').get();
+                req1.done(function(data){
+                    ok($.rcache.has('/rcache/counter'), "Counter should be in cache");
+                    equal($.rcache.count(), 1, 'Cache size should be one');
+                    equal(data, '1', 'Second counter should be one');
+                    start();
+                });
+            });
+
+            asyncTest('Caching', function(){
+                var req2 = $.rcache.item('/rcache/counter').get();
+                req2.done(function(data){
+                    equal($.rcache.count(), 1, 'Cache size should still be one, same item');
+                    equal(data, '1', 'Counter should still be one, reading from cache');
+                    start();
+                });
+            });
+
+            asyncTest('Conditional GET', function(){
+                var req2 = $.rcache.item('/rcache/counter').update();
+                req2.done(function(data, status, jqXHR){
+                    equal(jqXHR.status, 304, 'Resource should be not updated');
+                    start();
+                });
+            });
+
+            asyncTest('Forced GET', function(){
+                var req2 = $.rcache.item('/rcache/counter').forceGet();
+                req2.done(function(data, status){
+                    equal(data, '2', 'Counter shoulde be counted up at forced get');
+                    start();
+                });
+            });
+
+
+            module("RESTful");
+
+            asyncTest('PUT', function(){
+                var req2 = $.rcache.item('/rcache/putable').put('PUT content');
+                req2.done(function(data, status){
+                    equal(data, 'PUT content', 'Data retreived?');
+                    start();
+                });
+            });
+
+            asyncTest('DELETE', function(){
+                ok($.rcache.has('/rcache/putable'), 'Item should be in cache');
+                var req2 = $.rcache.item('/rcache/putable').del();
+                req2.done(function(data, status){
+                    ok(!$.rcache.has('/rcache/putable'), 'Item should be removed from cache');
+                    start();
+                });
+            });
+
+            asyncTest('POST', function(){
+                var req2 = $.rcache.item('/rcache/postable').post('POST content');
+                req2.done(function(data, status, jqXHR){
+                    var contentLocation = jqXHR.getResponseHeader('Content-Location');
+                    ok($.rcache.has(contentLocation), 'Item should be written to cache.')
+                    equal($.rcache.item(contentLocation).data, 'POST content', 'Data retreived?');
+                    start();
+                });
+            });
+
+
+            module("Events");
+
+            asyncTest('Remove callback', function(){
+                var req = $.rcache.item('/rcache/putable').put('PUT content');
+
+                $.rcache.item('/rcache/putable').onRemove(function(data, etag, modified, jqXHR){
+                    ok(true, 'onRemove callback called');
+                    start();
+                });
+
+                req.done(function(){
+                    $.rcache.item('/rcache/putable').del();
+                });
+            });
+
+            asyncTest('Write callback', function(){
+                $.rcache.item('/rcache/putable').onWrite(function(data, etag, modified, jqXHR){
+                    ok(true, 'onWrite callback called');
+                    equal(data, 'content..', 'Data should be returned');
+                    start();
+                }).put('content..');
+            });
+
+            asyncTest('updateAll', function(){
+                $.rcache.clear();
+
+                $.rcache.item('/rcache/counter2').onWrite(function(data, etag, modified, jqXHR){
+                    ok(true, 'onWrite callback called');
+                    start();
+                });
+                
+                $.rcache.updateAll();
+            });
+            
+        });
+    </script>
+
+    <style>
+        #custom-info {
+            background-color: #eee;
+            padding:10px 10px 10px 30px;
+            margin:5px 0;
+            font-family: 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif;
+            font-size: smaller;
+            font-weight: bold;
+            color: #345;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="qunit-header">rcache testsuite</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="custom-info">
+        Testsuite for the rcache observable jQuery cache.
+        Ajax tests are emulated using mockjax.
+    </div>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-fixture"></div>
+</body>
+</html>
