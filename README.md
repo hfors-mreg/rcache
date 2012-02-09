@@ -2,6 +2,7 @@ rcache: observable and active RESTful cacher for jQuery
 =======================================================
 
 [https://github.com/itbrig/rcache](https://github.com/itbrig/rcache)
+
 Report issues: [https://github.com/itbrig/rcache/issues](https://github.com/itbrig/rcache/issues)
 
 Description
