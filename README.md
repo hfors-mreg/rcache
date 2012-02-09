@@ -1,21 +1,21 @@
 rcache: observable and active RESTful cacher for jQuery
 =======================================================
 
-[link to repo]
-[link to docs]
-[link to issues]
+[https://github.com/itbrig/rcache](https://github.com/itbrig/rcache)
+Report issues: [https://github.com/itbrig/rcache/issues](https://github.com/itbrig/rcache/issues)
 
 Description
 -----------
 
-__rcache is an active cache__: It ads a layer between the application and the jQuery
-ajax interface, enabling you to reuse stored resources without consulting
+* _rcache is an active cache_. It adds a layer between the application and the
+jQuery ajax interface, enabling you to reuse stored resources without consulting
 the server.
 
-__rcache is an observable cache__: The application can register callbacks that will
+* _rcache is observable_. The application can register callbacks that will
 fire when a resources is beeing updated or removed.
 
-__rcache is a RESTful cache__: It supports the standard HTTP methods (GET, PUT, POST, DELETE).
+* _rcache supports RESTful applications_. It handles the standard HTTP methods
+GET, PUT, POST and DELETE.
 
 
 ### jQuery version ###
@@ -23,18 +23,13 @@ rcache has been tested with jQuery 1.7.1 using QUnit unit test in _/test_
 
 
 ### Tested browsers ###
-Firefox x.x, Chrome x.x
+Firefox 10, Chrome 16
 
 
 ### License ###
 Copyright (c) 2012 Hannes Forsgård
-GPL...
-
-
-Motivation for rcache
----------------------
-* Updating resources in the background.
-* Opening multiple versions of one resource.
+Licensed under GPL Version 3
+http://www.gnu.org/licenses/
 
 
 Conditional requests
@@ -56,20 +51,53 @@ proxy.
 API
 ---
 
-Examples
---------
+Some short usage examples. Checkout package and open the documentation for
+better coverage.
 
-        //När skapas tabben?? redan här?
-        var tab = createTab();
-        tab.setContent('laddar');
+### Access items ###
 
-        $.rcache.item('url').onWrite(function(data, etag, modified, jqXHR){
-            tab.setIsOutdated(); //ska visa ett ! bredvid * (för ej sparad, om den finns)
-            askUser('vill du uppdatera tab?', function(){
-                var content = template.render(data);
-                tab.setContent(content);
-                tab.setAltered = false;
-                tab.setIsOutdated = false;
-            });
-        }).get();
+    var jqXHR = $.rcache.item('/url/to/item').get();
+    jqXHR.done(function(){
+        //Do something when data is ready
+        //even if data is read from cache
+    });
+
+### RESTful applications ###
+    
+    //Update an item using PUT
+    $.rcache.item('/url/to/item').put({data});
+
+    //Create a new item using POST
+    var jqXHR = $.rcache.item('/creator/resource').post({data});
+    jqXHR.done(function(){
+        //A new item will be created in cache if response includes
+        //a Content-Location or Location header.
+    });
+    
+    //Delete an item using DELETE
+    $.rcache.item('/item/to/remove').del();
+    
+### Observe cache changes ###
+
+    $.rcache.item('/url/to/item').onWrite(function(data, etag, modified, jqXHR){
+        //Fired when cache item is updated (by a get, put, post or write action)
+        //Params: reponse data, etag and last-modified headers plus jqXHR object
+    });
+
+    $.rcache.item('/url/to/item').onRemove(function(data, etag, modified, jqXHR){
+        //Fired when cache item is removed (by a del or remove action)
+        //Params: reponse data, etag and last-modified headers plus jqXHR object
+    });
+
+## Update all items in cache ###
+
+    //Send a conditional get request, if the server responds with fresh data
+    //a write event is fired
+    $.rcache.item('/url/to/item').update();
+    
+    //Send an unconditional get request, write event will always be fired
+    $.rcache.item('/url/to/item').forceGet();
+
+    //Call .update() on all items with autoUpdate = true
+    $.rcache.updateAll();
 

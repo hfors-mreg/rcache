@@ -15,7 +15,7 @@
  * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</p>
  *
  * @fileOverview rcache: observable and active RESTful cacher for jQuery
- * @version 1.0.0
+ * @version 1.0.1
  * @requires jQuery
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
@@ -132,13 +132,16 @@
 
 
         /**
-         * @desc Update all items in cache using conditional GET requests
+         * @desc Update all items in cache where autoUpdate == true, using
+         * conditional GET requests
          * @param {dict} options Additional jQuery.ajax options
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
         this.updateAll = function(options){
             $.each(this.cache, function(key, item) { 
-                item.update(options);
+                if ( item.autoUpdate ) {
+                    item.update(options);
+                }
             });
             return this;
         }
@@ -150,11 +153,13 @@
          */
         this.ajaxOpts = {
             //Default settings goes here ...
+            cache: false
         }; 
 
 
         /**
-         * @desc Set default ajax optins
+         * @desc Set default ajax optins. By default rcache requests are created
+         * with the 'cache' option set to false.
          * @param {dict} options
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
@@ -209,6 +214,14 @@
          * @type jqXHR
          */
         this.jqXHR = false;
+
+        
+        /**
+         * @desc If true this item will be updated on updateAll calls.
+         * @name Item.autoUpdate
+         * @type bool
+         */
+        this.autoUpdate = false;
 
 
         /**
@@ -325,7 +338,8 @@
 
 
         /**
-         * @desc Write new content to item. Triggers write event.
+         * @desc Write new content to item. Triggers write event. Sets
+         * autoUpdate to true, enabling this item to be updated on updateAll
          * @name Item.write
          * @function
          * @param {mixed} data
@@ -335,6 +349,7 @@
         this.write = function(data, jqXHR){
             this.data = data;
             this.jqXHR = jqXHR;
+            this.autoUpdate = true;
             this.triggerWrite();
             return this;
         }
@@ -412,6 +427,13 @@
                 //304 == Not Modified
                 if ( jqXHR.status == 200 ) {
                     item.write(body, jqXHR);
+                }
+            });
+
+            jqXHR.fail(function(jqXHR){
+                //Remove item on response 404
+                if ( jqXHR.status == 404 ) {
+                    item.remove();
                 }
             });
 

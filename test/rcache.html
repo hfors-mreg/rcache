@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">
     <script type="text/javascript" src="https://raw.github.com/appendto/jquery-mockjax/master/jquery.mockjax.js"></script>
 
-    <script type="text/javascript" src="../jquery.rcache.min.js"></script>
+    <script type="text/javascript" src="../jquery.rcache.js"></script>
 
     <script>
         //Setting up mockjax
@@ -43,6 +43,14 @@
                     this.responseText = counter2++;
                 }
             });
+
+            //A resource that is never there
+            $.mockjax({
+                type: 'GET',
+                url: '/rcache/nocontent',
+                status: 404,
+            });
+
 
             //An updatable resource
             var putpage = '';
@@ -195,7 +203,6 @@
             });
 
             asyncTest('DELETE', function(){
-                ok($.rcache.has('/rcache/putable'), 'Item should be in cache');
                 var req2 = $.rcache.item('/rcache/putable').del();
                 req2.done(function(data, status){
                     ok(!$.rcache.has('/rcache/putable'), 'Item should be removed from cache');
@@ -240,13 +247,29 @@
             asyncTest('updateAll', function(){
                 $.rcache.clear();
 
-                $.rcache.item('/rcache/counter2').onWrite(function(data, etag, modified, jqXHR){
-                    ok(true, 'onWrite callback called');
-                    start();
+                $.rcache.item('/rcache/counter').onWrite(function(data, etag, modified, jqXHR){
+                    ok(false, 'onWrite callback for counter should not be called, autoUpdate == false');
                 });
+
+                $.rcache.item('/rcache/counter2').onWrite(function(data, etag, modified, jqXHR){
+                    ok(true, 'onWrite callback called for counter2');
+                    start();
+                }).write('soma data to trigger autoUpdate==true');
                 
                 $.rcache.updateAll();
             });
+
+            asyncTest('remove from cache on response 404', function(){
+                $.rcache.clear();
+
+                $.rcache.item('/rcache/nocontent').onRemove(function(data, etag, modified, jqXHR){
+                    ok(true, 'onRemove callback called');
+                    start();
+                }).write('soma data to trigger autoUpdate==true');
+                
+                $.rcache.updateAll();
+            });
+
             
         });
     </script>
