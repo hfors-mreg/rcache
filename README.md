@@ -82,18 +82,18 @@ better coverage.
 
     $.rcache.item('/url/to/item').onWrite(function(data, etag, modified, jqXHR){
         //Fired when cache item is updated (by a get, put, post or write action)
-        //Params: reponse data, etag and last-modified headers plus jqXHR object
+        //Params: reponse data, etag and last-modified headers, jqXHR object
     });
 
     $.rcache.item('/url/to/item').onRemove(function(data, etag, modified, jqXHR){
         //Fired when cache item is removed (by a del or remove action)
-        //Params: reponse data, etag and last-modified headers plus jqXHR object
+        //Params: reponse data, etag and last-modified headers, jqXHR object
     });
 
-## Update all items in cache ###
+### Update items in cache ###
 
-    //Send a conditional get request, if the server responds with fresh data
-    //a write event is fired
+    //Send a conditional get request
+    //if the server responds with fresh data a write event is fired
     $.rcache.item('/url/to/item').update();
     
     //Send an unconditional get request, write event will always be fired
