@@ -51,6 +51,18 @@
                 status: 404,
             });
 
+            //A resource to reset
+            $.mockjax({
+                type: 'GET',
+                url: '/rcache/reset',
+                responseText: 'xxxx',
+            });
+            $.mockjax({
+                type: 'PUT',
+                url: '/rcache/reset',
+                status: 205,
+            });
+
 
             //An updatable resource
             var putpage = '';
@@ -218,6 +230,24 @@
                     equal($.rcache.item(contentLocation).data, 'POST content', 'Data retreived?');
                     start();
                 });
+            });
+
+            test('Reset cache on 205 response', function(){
+                stop();
+                var req2 = $.rcache.item('/rcache/reset').get();
+                req2.done(function(data, status, jqXHR){
+                    equal(data, 'xxxx', 'Data should be in cache');
+                    start();
+                });
+
+                stop();
+                $.rcache.setUp({'reset-resource-to': 'empty'});
+                var req2 = $.rcache.item('/rcache/reset').put('yo');
+                req2.done(function(data, status, jqXHR){
+                    equal($.rcache.item('/rcache/reset').data, 'empty', 'Data should be reset');
+                    start();
+                });
+
             });
 
 

@@ -29,8 +29,7 @@ Firefox 10, Chrome 16
 
 ### License ###
 Copyright (c) 2012 Hannes Forsgård
-Licensed under GPL Version 3
-http://www.gnu.org/licenses/
+Licensed under the WTFPL (http://sam.zoy.org/wtfpl/)
 
 
 Conditional requests

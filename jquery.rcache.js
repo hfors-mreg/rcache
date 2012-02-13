@@ -1,21 +1,8 @@
 /**
  * Copyright (c) 2012 Hannes Forsgård
- *
- * <p>This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.</p>
- * 
- * <p>This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.</p>
- * 
- * <p>You should have received a copy of the GNU General Public License
- * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</p>
- *
+ * Licensed under the WTFPL (http://sam.zoy.org/wtfpl/)
  * @fileOverview rcache: observable and active RESTful cacher for jQuery
- * @version 1.0.1
+ * @version 1.0.2
  * @requires jQuery
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
@@ -37,6 +24,10 @@
      * jQuery.ajax when interacting with the server.
      * <p>A note on keys: Cache keys are case sensitive urls. Take care to use
      * consistent urls, even query parameters and hashes count.</p>
+     * <p>rcache only cache 200 and 201 responses. Redirects are not followed
+     * due to the risk of creating redirect loops. 404 and 410 responses
+     * automatically removes item from cache. 205 responses resets item to
+     * current 'reset-resource-to' value (see setUp()).</p>
      * @author Hannes Forsgård
      * @class
      */
@@ -47,11 +38,12 @@
 
 
         /**
-         * @desc rcache settings. See setup() for altering settings.
+         * @desc rcache settings. See setUp() for altering settings.
          * @var {dict} settings
          */
         this.settings = {
-            'update-on-read': true
+            'update-on-read': true,
+            'reset-resource-to': {},
         };
 
 
@@ -61,11 +53,14 @@
          *     <dt>update-on-read</dt>
          *     <dd>Boolean. Send conditional get requests in the
          *     background on cache reads? Deafaults to true.</dd>
+         *     <dt>reset-resource-to</dt>
+         *     <dd>When the server responds with a 205 Reset content status code
+         *     item data is reset to this value. Defaults to {}.</dd>
          * </dl>
          * @param {dict} settings
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
-        this.setup = function(settings){
+        this.setUp = function(settings){
             $.extend(this.settings, settings);
             return this;
         }
@@ -152,7 +147,7 @@
          * @var {dict} ajaxOpts
          */
         this.ajaxOpts = {
-            //Default settings goes here ...
+            // Default settings goes here ...
             cache: false
         }; 
 
@@ -170,14 +165,33 @@
 
 
         /**
-         * @desc Internal method to create and fire a jqXHR.
+         * @desc Internal method to create and fire a jqXHR. On 404 Not Found or
+         * 410 Gone responses the cache item is deleted. On 205 Reset Content
+         * responses cache item is cleared to setting 'reset-resource-to'.
          * @param {dict} options
          * @returns {jqXHR}
          */
         this.getJqXHR = function(options){
             var settings = {};
             $.extend(settings, this.ajaxOpts, options);
-            return $.ajax(settings);
+            var jqXHR = $.ajax(settings);
+
+            jqXHR.fail(function(jqXHR){
+                // Remove from cache on 404 and 410 fails
+                if ( jqXHR.status == 404 || jqXHR.status == 410 ) {
+                    $.rcache.item(settings.url).remove();
+                }
+            });
+
+            jqXHR.done(function(x, xx, jqXHR){
+                // Reset cache content on 205 response
+                if ( jqXHR.status == 205 ) {
+                    var empty = $.rcache.settings['reset-resource-to'];
+                    $.rcache.item(settings.url).write(empty, jqXHR);
+                }
+            });
+
+            return jqXHR;
         }
 
     }
@@ -380,16 +394,14 @@
          */
         this.get = function(options){
             if ( this.hasData() && this.jqXHR ) {
-                
-                //Perform update in the background
+                // Perform update in the background
                 if ( $.rcache.settings['update-on-read'] ) {
                     this.update(options);
                 }
-                
-                //Return jqXHR of item already in cache
+                // Return jqXHR of item already in cache
                 return this.jqXHR;
             } else {
-                //Create new ajax request
+                // Create new ajax request
                 return this.forceGet(options);
             }
         }
@@ -423,17 +435,10 @@
             var item = this;
 
             jqXHR.done(function(body, status, jqXHR){
-                //Write to item on success
-                //304 == Not Modified
+                // Write to item on success
+                // 304 == Not Modified
                 if ( jqXHR.status == 200 ) {
                     item.write(body, jqXHR);
-                }
-            });
-
-            jqXHR.fail(function(jqXHR){
-                //Remove item on response 404
-                if ( jqXHR.status == 404 ) {
-                    item.remove();
                 }
             });
 
@@ -468,8 +473,10 @@
             var item = this;
 
             jqXHR.done(function(body, status, jqXHR){
-                //Write to item on success
-                item.write(body, jqXHR);
+                // Write to item on success
+                if ( jqXHR.status == 200 ) {
+                    item.write(body, jqXHR);
+                }
             });
 
             return jqXHR;
@@ -505,8 +512,10 @@
             var item = this;
 
             jqXHR.done(function(body, status, jqXHR){
-                //Remove from cache on success
-                item.remove();
+                // Remove from cache on success
+                if ( jqXHR.status == 200 ) {
+                    item.remove();
+                }
             });
             return jqXHR;
         }
@@ -544,7 +553,7 @@
             var item = this;
 
             jqXHR.done(function(body, status, jqXHR){
-                //write to cache if these requirements are met
+                // Write to cache if these requirements are met
                 if ( jqXHR.status == 200 && body ) {
                     item.write(body, jqXHR);
                 }
@@ -582,7 +591,7 @@
                 var contentLocation = jqXHR.getResponseHeader('Content-Location');
                 var location = jqXHR.getResponseHeader('Location');
 
-                //write to cache if these requirements are met
+                // Write to cache if these requirements are met
                 if (
                     (jqXHR.status == 200 || jqXHR.status == 201)
                     && body
@@ -590,7 +599,7 @@
                 ) {
                     $.rcache.item(contentLocation).write(body, jqXHR);
                 
-                //else get a fresh copy
+                // Else get a fresh copy
                 } else if ( location ) {
                     $.rcache.item(location).forceGet();
                 }

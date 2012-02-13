@@ -7,606 +7,615 @@
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
 <span class='line'>  2</span>  * Copyright (c) 2012 Hannes Forsgård
-<span class='line'>  3</span>  *
-<span class='line'>  4</span>  * &lt;p>This program is free software: you can redistribute it and/or modify
-<span class='line'>  5</span>  * it under the terms of the GNU General Public License as published by
-<span class='line'>  6</span>  * the Free Software Foundation, either version 3 of the License, or
-<span class='line'>  7</span>  * (at your option) any later version.&lt;/p>
-<span class='line'>  8</span>  * 
-<span class='line'>  9</span>  * &lt;p>This program is distributed in the hope that it will be useful,
-<span class='line'> 10</span>  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-<span class='line'> 11</span>  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-<span class='line'> 12</span>  * GNU General Public License for more details.&lt;/p>
-<span class='line'> 13</span>  * 
-<span class='line'> 14</span>  * &lt;p>You should have received a copy of the GNU General Public License
-<span class='line'> 15</span>  * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&lt;/p>
-<span class='line'> 16</span>  *
-<span class='line'> 17</span>  * @fileOverview rcache: observable and active RESTful cacher for jQuery
-<span class='line'> 18</span>  * @version 1.0.1
-<span class='line'> 19</span>  * @requires jQuery
-<span class='line'> 20</span>  * @author Hannes Forsgård &lt;hannes.forsgard@gmail.com>
-<span class='line'> 21</span>  */</span><span class="WHIT">
-<span class='line'> 22</span> 
-<span class='line'> 23</span> 
-<span class='line'> 24</span> </span><span class="COMM">/**
-<span class='line'> 25</span>  * See (http://jquery.com/).
-<span class='line'> 26</span>  * @name $
-<span class='line'> 27</span>  * @class 
-<span class='line'> 28</span>  * See the jQuery Library  (http://jquery.com/) for full details.  This just
-<span class='line'> 29</span>  * documents the function and classes that are added to jQuery by this plug-in.
-<span class='line'> 30</span>  */</span><span class="WHIT">
-<span class='line'> 31</span> 
-<span class='line'> 32</span> 
-<span class='line'> 33</span> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 34</span> 
-<span class='line'> 35</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'> 36</span>      * @desc Active and observable ajax cache for jQuery REST applications. Uses
-<span class='line'> 37</span>      * jQuery.ajax when interacting with the server.
-<span class='line'> 38</span>      * &lt;p>A note on keys: Cache keys are case sensitive urls. Take care to use
-<span class='line'> 39</span>      * consistent urls, even query parameters and hashes count.&lt;/p>
-<span class='line'> 40</span>      * @author Hannes Forsgård
-<span class='line'> 41</span>      * @class
-<span class='line'> 42</span>      */</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">    </span><span class="NAME">$.rcache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 44</span> 
-<span class='line'> 45</span> 
-<span class='line'> 46</span> </span><span class="WHIT">        </span><span class="COMM">/* Settings */</span><span class="WHIT">
-<span class='line'> 47</span> 
+<span class='line'>  3</span>  * Licensed under the WTFPL (http://sam.zoy.org/wtfpl/)
+<span class='line'>  4</span>  * @fileOverview rcache: observable and active RESTful cacher for jQuery
+<span class='line'>  5</span>  * @version 1.0.2
+<span class='line'>  6</span>  * @requires jQuery
+<span class='line'>  7</span>  * @author Hannes Forsgård &lt;hannes.forsgard@gmail.com>
+<span class='line'>  8</span>  */</span><span class="WHIT">
+<span class='line'>  9</span> 
+<span class='line'> 10</span> 
+<span class='line'> 11</span> </span><span class="COMM">/**
+<span class='line'> 12</span>  * See (http://jquery.com/).
+<span class='line'> 13</span>  * @name $
+<span class='line'> 14</span>  * @class 
+<span class='line'> 15</span>  * See the jQuery Library  (http://jquery.com/) for full details.  This just
+<span class='line'> 16</span>  * documents the function and classes that are added to jQuery by this plug-in.
+<span class='line'> 17</span>  */</span><span class="WHIT">
+<span class='line'> 18</span> 
+<span class='line'> 19</span> 
+<span class='line'> 20</span> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">$</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 21</span> 
+<span class='line'> 22</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 23</span>      * @desc Active and observable ajax cache for jQuery REST applications. Uses
+<span class='line'> 24</span>      * jQuery.ajax when interacting with the server.
+<span class='line'> 25</span>      * &lt;p>A note on keys: Cache keys are case sensitive urls. Take care to use
+<span class='line'> 26</span>      * consistent urls, even query parameters and hashes count.&lt;/p>
+<span class='line'> 27</span>      * &lt;p>rcache only cache 200 and 201 responses. Redirects are not followed
+<span class='line'> 28</span>      * due to the risk of creating redirect loops. 404 and 410 responses
+<span class='line'> 29</span>      * automatically removes item from cache. 205 responses resets item to
+<span class='line'> 30</span>      * current 'reset-resource-to' value (see setUp()).&lt;/p>
+<span class='line'> 31</span>      * @author Hannes Forsgård
+<span class='line'> 32</span>      * @class
+<span class='line'> 33</span>      */</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">    </span><span class="NAME">$.rcache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 35</span> 
+<span class='line'> 36</span> 
+<span class='line'> 37</span> </span><span class="WHIT">        </span><span class="COMM">/* Settings */</span><span class="WHIT">
+<span class='line'> 38</span> 
+<span class='line'> 39</span> 
+<span class='line'> 40</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 41</span>          * @desc rcache settings. See setUp() for altering settings.
+<span class='line'> 42</span>          * @var {dict} settings
+<span class='line'> 43</span>          */</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">        </span><span class="NAME">this.settings</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">            </span><span class="STRN">'update-on-read'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">            </span><span class="STRN">'reset-resource-to'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 48</span> 
-<span class='line'> 49</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'> 50</span>          * @desc rcache settings. See setup() for altering settings.
-<span class='line'> 51</span>          * @var {dict} settings
-<span class='line'> 52</span>          */</span><span class="WHIT">
-<span class='line'> 53</span> </span><span class="WHIT">        </span><span class="NAME">this.settings</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">            </span><span class="STRN">'update-on-read'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="WHIT">
-<span class='line'> 55</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 56</span> 
-<span class='line'> 57</span> 
-<span class='line'> 58</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'> 59</span>          * @desc Set rcache settings. The following settings are available:
-<span class='line'> 60</span>          * &lt;dl>
-<span class='line'> 61</span>          *     &lt;dt>update-on-read&lt;/dt>
-<span class='line'> 62</span>          *     &lt;dd>Boolean. Send conditional get requests in the
-<span class='line'> 63</span>          *     background on cache reads? Deafaults to true.&lt;/dd>
-<span class='line'> 64</span>          * &lt;/dl>
-<span class='line'> 65</span>          * @param {dict} settings
-<span class='line'> 66</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
-<span class='line'> 67</span>          */</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">        </span><span class="NAME">this.setup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">settings</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="NAME">this.settings</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">settings</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 72</span> 
-<span class='line'> 73</span> </span><span class="WHIT">        
-<span class='line'> 74</span>         </span><span class="COMM">/* Basic functionality */</span><span class="WHIT">        
-<span class='line'> 75</span>         
-<span class='line'> 76</span> 
-<span class='line'> 77</span>         </span><span class="COMM">/**
-<span class='line'> 78</span>          * @desc The internal cache store
-<span class='line'> 79</span>          * @var {dict} cache
-<span class='line'> 80</span>          */</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">        </span><span class="NAME">this.cache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 82</span> 
-<span class='line'> 83</span> 
-<span class='line'> 84</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'> 85</span>          * @desc Get number of items in cache
-<span class='line'> 86</span>          * @returns {int}
-<span class='line'> 87</span>          */</span><span class="WHIT">
-<span class='line'> 88</span> </span><span class="WHIT">        </span><span class="NAME">this.count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 89</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.cache</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
-<span class='line'> 91</span>                 </span><span class="NAME">count</span><span class="PUNC">++</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 93</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">count</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 94</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 95</span> 
-<span class='line'> 96</span> 
-<span class='line'> 97</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'> 98</span>          * @desc Returns TRUE if cache includes item, FALSE otherwise
-<span class='line'> 99</span>          * @param {string} key
-<span class='line'>100</span>          * @returns {bool}
-<span class='line'>101</span>          */</span><span class="WHIT">
-<span class='line'>102</span> </span><span class="WHIT">        </span><span class="NAME">this.has</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>103</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">key</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">this.cache</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>104</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>105</span> 
-<span class='line'>106</span> 
-<span class='line'>107</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>108</span>          * @desc Get item for cache key. If item does not exist
-<span class='line'>109</span>          * an empty item is created.
-<span class='line'>110</span>          * @param {string} key
-<span class='line'>111</span>          * @returns {Item}
-<span class='line'>112</span>          */</span><span class="WHIT">
-<span class='line'>113</span> </span><span class="WHIT">        </span><span class="NAME">this.item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>114</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.has</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>115</span> </span><span class="WHIT">                </span><span class="NAME">this.cache</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Item</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>116</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>117</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.cache</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>118</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>119</span> 
-<span class='line'>120</span> 
-<span class='line'>121</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>122</span>          * @desc Clear cache
-<span class='line'>123</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
-<span class='line'>124</span>          */</span><span class="WHIT">
-<span class='line'>125</span> </span><span class="WHIT">       </span><span class="NAME">this.clear</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>126</span> </span><span class="WHIT">            </span><span class="NAME">this.cache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>127</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>128</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>129</span> 
-<span class='line'>130</span> 
-<span class='line'>131</span> </span><span class="WHIT">        </span><span class="COMM">/* AJAX */</span><span class="WHIT">
-<span class='line'>132</span> 
-<span class='line'>133</span> 
-<span class='line'>134</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>135</span>          * @desc Update all items in cache where autoUpdate == true, using
-<span class='line'>136</span>          * conditional GET requests
-<span class='line'>137</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>138</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
-<span class='line'>139</span>          */</span><span class="WHIT">
-<span class='line'>140</span> </span><span class="WHIT">        </span><span class="NAME">this.updateAll</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>141</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.cache</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
-<span class='line'>142</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">item.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">                    </span><span class="NAME">item.update</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>146</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>147</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>148</span> 
-<span class='line'>149</span> 
-<span class='line'>150</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>151</span>          * @desc Settings used when creating ajax objects
-<span class='line'>152</span>          * @var {dict} ajaxOpts
-<span class='line'>153</span>          */</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">        </span><span class="NAME">this.ajaxOpts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">            </span><span class="COMM">//Default settings goes here ...</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">            </span><span class="NAME">cache</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT"> 
-<span class='line'>158</span> 
-<span class='line'>159</span> 
-<span class='line'>160</span>         </span><span class="COMM">/**
-<span class='line'>161</span>          * @desc Set default ajax optins. By default rcache requests are created
-<span class='line'>162</span>          * with the 'cache' option set to false.
-<span class='line'>163</span>          * @param {dict} options
-<span class='line'>164</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
-<span class='line'>165</span>          */</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">        </span><span class="NAME">this.ajaxSetup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="NAME">this.ajaxOpts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>169</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>170</span> 
-<span class='line'>171</span> 
-<span class='line'>172</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>173</span>          * @desc Internal method to create and fire a jqXHR.
-<span class='line'>174</span>          * @param {dict} options
-<span class='line'>175</span>          * @returns {jqXHR}
-<span class='line'>176</span>          */</span><span class="WHIT">
-<span class='line'>177</span> </span><span class="WHIT">        </span><span class="NAME">this.getJqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>178</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">settings</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="NAME">settings</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.ajaxOpts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">$.ajax</span><span class="PUNC">(</span><span class="NAME">settings</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>182</span> 
-<span class='line'>183</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>184</span> 
+<span class='line'> 49</span> 
+<span class='line'> 50</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 51</span>          * @desc Set rcache settings. The following settings are available:
+<span class='line'> 52</span>          * &lt;dl>
+<span class='line'> 53</span>          *     &lt;dt>update-on-read&lt;/dt>
+<span class='line'> 54</span>          *     &lt;dd>Boolean. Send conditional get requests in the
+<span class='line'> 55</span>          *     background on cache reads? Deafaults to true.&lt;/dd>
+<span class='line'> 56</span>          *     &lt;dt>reset-resource-to&lt;/dt>
+<span class='line'> 57</span>          *     &lt;dd>When the server responds with a 205 Reset content status code
+<span class='line'> 58</span>          *     item data is reset to this value. Defaults to {}.&lt;/dd>
+<span class='line'> 59</span>          * &lt;/dl>
+<span class='line'> 60</span>          * @param {dict} settings
+<span class='line'> 61</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
+<span class='line'> 62</span>          */</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">        </span><span class="NAME">this.setUp</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">settings</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="NAME">this.settings</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">settings</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 67</span> 
+<span class='line'> 68</span> </span><span class="WHIT">        
+<span class='line'> 69</span>         </span><span class="COMM">/* Basic functionality */</span><span class="WHIT">        
+<span class='line'> 70</span>         
+<span class='line'> 71</span> 
+<span class='line'> 72</span>         </span><span class="COMM">/**
+<span class='line'> 73</span>          * @desc The internal cache store
+<span class='line'> 74</span>          * @var {dict} cache
+<span class='line'> 75</span>          */</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">        </span><span class="NAME">this.cache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 77</span> 
+<span class='line'> 78</span> 
+<span class='line'> 79</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 80</span>          * @desc Get number of items in cache
+<span class='line'> 81</span>          * @returns {int}
+<span class='line'> 82</span>          */</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">        </span><span class="NAME">this.count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.cache</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='line'> 86</span>                 </span><span class="NAME">count</span><span class="PUNC">++</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">count</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> 
+<span class='line'> 92</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 93</span>          * @desc Returns TRUE if cache includes item, FALSE otherwise
+<span class='line'> 94</span>          * @param {string} key
+<span class='line'> 95</span>          * @returns {bool}
+<span class='line'> 96</span>          */</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">        </span><span class="NAME">this.has</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">key</span><span class="WHIT"> </span><span class="KEYW">in</span><span class="WHIT"> </span><span class="NAME">this.cache</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>100</span> 
+<span class='line'>101</span> 
+<span class='line'>102</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>103</span>          * @desc Get item for cache key. If item does not exist
+<span class='line'>104</span>          * an empty item is created.
+<span class='line'>105</span>          * @param {string} key
+<span class='line'>106</span>          * @returns {Item}
+<span class='line'>107</span>          */</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">        </span><span class="NAME">this.item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.has</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">                </span><span class="NAME">this.cache</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Item</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.cache</span><span class="PUNC">[</span><span class="NAME">key</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>114</span> 
+<span class='line'>115</span> 
+<span class='line'>116</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>117</span>          * @desc Clear cache
+<span class='line'>118</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
+<span class='line'>119</span>          */</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">       </span><span class="NAME">this.clear</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">            </span><span class="NAME">this.cache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>124</span> 
+<span class='line'>125</span> 
+<span class='line'>126</span> </span><span class="WHIT">        </span><span class="COMM">/* AJAX */</span><span class="WHIT">
+<span class='line'>127</span> 
+<span class='line'>128</span> 
+<span class='line'>129</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>130</span>          * @desc Update all items in cache where autoUpdate == true, using
+<span class='line'>131</span>          * conditional GET requests
+<span class='line'>132</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>133</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
+<span class='line'>134</span>          */</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">        </span><span class="NAME">this.updateAll</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.cache</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='line'>137</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">item.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="WHIT">                    </span><span class="NAME">item.update</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>143</span> 
+<span class='line'>144</span> 
+<span class='line'>145</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>146</span>          * @desc Settings used when creating ajax objects
+<span class='line'>147</span>          * @var {dict} ajaxOpts
+<span class='line'>148</span>          */</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">        </span><span class="NAME">this.ajaxOpts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">            </span><span class="COMM">// Default settings goes here ...</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">            </span><span class="NAME">cache</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT"> 
+<span class='line'>153</span> 
+<span class='line'>154</span> 
+<span class='line'>155</span>         </span><span class="COMM">/**
+<span class='line'>156</span>          * @desc Set default ajax optins. By default rcache requests are created
+<span class='line'>157</span>          * with the 'cache' option set to false.
+<span class='line'>158</span>          * @param {dict} options
+<span class='line'>159</span>          * @returns {$.rcache} Return rcache instance for chaining purposes
+<span class='line'>160</span>          */</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">        </span><span class="NAME">this.ajaxSetup</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="NAME">this.ajaxOpts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>165</span> 
+<span class='line'>166</span> 
+<span class='line'>167</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>168</span>          * @desc Internal method to create and fire a jqXHR. On 404 Not Found or
+<span class='line'>169</span>          * 410 Gone responses the cache item is deleted. On 205 Reset Content
+<span class='line'>170</span>          * responses cache item is cleared to setting 'reset-resource-to'.
+<span class='line'>171</span>          * @param {dict} options
+<span class='line'>172</span>          * @returns {jqXHR}
+<span class='line'>173</span>          */</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">        </span><span class="NAME">this.getJqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">settings</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="NAME">settings</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.ajaxOpts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.ajax</span><span class="PUNC">(</span><span class="NAME">settings</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>178</span> 
+<span class='line'>179</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.fail</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">                </span><span class="COMM">// Remove from cache on 404 and 410 fails</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">404</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">410</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">                    </span><span class="NAME">$.rcache.item</span><span class="PUNC">(</span><span class="NAME">settings.url</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">remove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>185</span> 
-<span class='line'>186</span> 
-<span class='line'>187</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>188</span>      * @desc Each item in cache is represented by an Item object
-<span class='line'>189</span>      * @param {string} url Url of created item
-<span class='line'>190</span>      * @class
-<span class='line'>191</span>      * @name Item
-<span class='line'>192</span>      */</span><span class="WHIT">
-<span class='line'>193</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Item</span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>194</span> 
-<span class='line'>195</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>196</span>          * @desc Item url
-<span class='line'>197</span>          * @name Item.url
-<span class='line'>198</span>          * @type string
-<span class='line'>199</span>          */</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">        </span><span class="NAME">this.url</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>201</span> 
-<span class='line'>202</span> 
-<span class='line'>203</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>204</span>          * @desc Resource item data
-<span class='line'>205</span>          * @name Item.data
-<span class='line'>206</span>          * @type mixed
-<span class='line'>207</span>          */</span><span class="WHIT">
-<span class='line'>208</span> </span><span class="WHIT">        </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>209</span> 
-<span class='line'>210</span> </span><span class="WHIT"> 
-<span class='line'>211</span>         </span><span class="COMM">/**
-<span class='line'>212</span>          * @desc Request object that fetched resource
-<span class='line'>213</span>          * @name Item.jqXHR
-<span class='line'>214</span>          * @type jqXHR
-<span class='line'>215</span>          */</span><span class="WHIT">
-<span class='line'>216</span> </span><span class="WHIT">        </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>217</span> 
-<span class='line'>218</span> </span><span class="WHIT">        
-<span class='line'>219</span>         </span><span class="COMM">/**
-<span class='line'>220</span>          * @desc If true this item will be updated on updateAll calls.
-<span class='line'>221</span>          * @name Item.autoUpdate
-<span class='line'>222</span>          * @type bool
-<span class='line'>223</span>          */</span><span class="WHIT">
-<span class='line'>224</span> </span><span class="WHIT">        </span><span class="NAME">this.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>225</span> 
-<span class='line'>226</span> 
-<span class='line'>227</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>228</span>          * @desc Callback functions for write events
-<span class='line'>229</span>          * @name Item.writeCallbacks
-<span class='line'>230</span>          * @type array
-<span class='line'>231</span>          */</span><span class="WHIT">
-<span class='line'>232</span> </span><span class="WHIT">        </span><span class="NAME">this.writeCallbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>233</span> </span><span class="WHIT">        
-<span class='line'>234</span> 
-<span class='line'>235</span>         </span><span class="COMM">/**
-<span class='line'>236</span>          * @desc Callback functions for remove events
-<span class='line'>237</span>          * @name Item.removeCallbacks
-<span class='line'>238</span>          * @type array
-<span class='line'>239</span>          */</span><span class="WHIT">
-<span class='line'>240</span> </span><span class="WHIT">        </span><span class="NAME">this.removeCallbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>241</span> 
-<span class='line'>242</span> 
-<span class='line'>243</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>244</span>          * @desc Inspect if item contains data
-<span class='line'>245</span>          * @name Item.hasData
-<span class='line'>246</span>          * @function
-<span class='line'>247</span>          * @returns {bool}
-<span class='line'>248</span>          */</span><span class="WHIT">
-<span class='line'>249</span> </span><span class="WHIT">        </span><span class="NAME">this.hasData</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>250</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">this.data</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>251</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>252</span> 
-<span class='line'>253</span> 
-<span class='line'>254</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>255</span>          * @desc Get ETag response header
-<span class='line'>256</span>          * @name Item.etag
-<span class='line'>257</span>          * @function
-<span class='line'>258</span>          * @return {string}
-<span class='line'>259</span>          */</span><span class="WHIT">
-<span class='line'>260</span> </span><span class="WHIT">        </span><span class="NAME">this.etag</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>261</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>262</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">etag</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'ETag'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>263</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">etag</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">etag</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>264</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>265</span> 
+<span class='line'>186</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">xx</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">                </span><span class="COMM">// Reset cache content on 205 response</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">205</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">empty</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.settings</span><span class="PUNC">[</span><span class="STRN">'reset-resource-to'</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">                    </span><span class="NAME">$.rcache.item</span><span class="PUNC">(</span><span class="NAME">settings.url</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">write</span><span class="PUNC">(</span><span class="NAME">empty</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> 
+<span class='line'>194</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>198</span> 
+<span class='line'>199</span> 
+<span class='line'>200</span> 
+<span class='line'>201</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>202</span>      * @desc Each item in cache is represented by an Item object
+<span class='line'>203</span>      * @param {string} url Url of created item
+<span class='line'>204</span>      * @class
+<span class='line'>205</span>      * @name Item
+<span class='line'>206</span>      */</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Item</span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>208</span> 
+<span class='line'>209</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>210</span>          * @desc Item url
+<span class='line'>211</span>          * @name Item.url
+<span class='line'>212</span>          * @type string
+<span class='line'>213</span>          */</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">        </span><span class="NAME">this.url</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>215</span> 
+<span class='line'>216</span> 
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>218</span>          * @desc Resource item data
+<span class='line'>219</span>          * @name Item.data
+<span class='line'>220</span>          * @type mixed
+<span class='line'>221</span>          */</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">        </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>223</span> 
+<span class='line'>224</span> </span><span class="WHIT"> 
+<span class='line'>225</span>         </span><span class="COMM">/**
+<span class='line'>226</span>          * @desc Request object that fetched resource
+<span class='line'>227</span>          * @name Item.jqXHR
+<span class='line'>228</span>          * @type jqXHR
+<span class='line'>229</span>          */</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">        </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>231</span> 
+<span class='line'>232</span> </span><span class="WHIT">        
+<span class='line'>233</span>         </span><span class="COMM">/**
+<span class='line'>234</span>          * @desc If true this item will be updated on updateAll calls.
+<span class='line'>235</span>          * @name Item.autoUpdate
+<span class='line'>236</span>          * @type bool
+<span class='line'>237</span>          */</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">        </span><span class="NAME">this.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>239</span> 
+<span class='line'>240</span> 
+<span class='line'>241</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>242</span>          * @desc Callback functions for write events
+<span class='line'>243</span>          * @name Item.writeCallbacks
+<span class='line'>244</span>          * @type array
+<span class='line'>245</span>          */</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">        </span><span class="NAME">this.writeCallbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">        
+<span class='line'>248</span> 
+<span class='line'>249</span>         </span><span class="COMM">/**
+<span class='line'>250</span>          * @desc Callback functions for remove events
+<span class='line'>251</span>          * @name Item.removeCallbacks
+<span class='line'>252</span>          * @type array
+<span class='line'>253</span>          */</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">        </span><span class="NAME">this.removeCallbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>255</span> 
+<span class='line'>256</span> 
+<span class='line'>257</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>258</span>          * @desc Inspect if item contains data
+<span class='line'>259</span>          * @name Item.hasData
+<span class='line'>260</span>          * @function
+<span class='line'>261</span>          * @returns {bool}
+<span class='line'>262</span>          */</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">        </span><span class="NAME">this.hasData</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="PUNC">!</span><span class="NAME">this.data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>266</span> 
-<span class='line'>267</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>268</span>          * @desc Get Last-Modified response header
-<span class='line'>269</span>          * @name Item.modified
-<span class='line'>270</span>          * @function
-<span class='line'>271</span>          * @return {string}
-<span class='line'>272</span>          */</span><span class="WHIT">
-<span class='line'>273</span> </span><span class="WHIT">        </span><span class="NAME">this.modified</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>274</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>275</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">modified</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'Last-Modified'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>276</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">modified</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">modified</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>277</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>278</span> 
+<span class='line'>267</span> 
+<span class='line'>268</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>269</span>          * @desc Get ETag response header
+<span class='line'>270</span>          * @name Item.etag
+<span class='line'>271</span>          * @function
+<span class='line'>272</span>          * @return {string}
+<span class='line'>273</span>          */</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">        </span><span class="NAME">this.etag</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>275</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">etag</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'ETag'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>277</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">etag</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">etag</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>279</span> 
-<span class='line'>280</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>281</span>          * @desc Bind function to write event. Callbacks consume four parameters:
-<span class='line'>282</span>          * the response body, Etag header (if present), Last-Modofied header
-<span class='line'>283</span>          * (if present) and the jqXHR object.
-<span class='line'>284</span>          * @name Item.onWrite
-<span class='line'>285</span>          * @function
-<span class='line'>286</span>          * @param {func} func
-<span class='line'>287</span>          * @returns {Item} This item, for chaining purposes
-<span class='line'>288</span>          */</span><span class="WHIT">
-<span class='line'>289</span> </span><span class="WHIT">        </span><span class="NAME">this.onWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>290</span> </span><span class="WHIT">            </span><span class="NAME">this.writeCallbacks.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>291</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>292</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>280</span> 
+<span class='line'>281</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>282</span>          * @desc Get Last-Modified response header
+<span class='line'>283</span>          * @name Item.modified
+<span class='line'>284</span>          * @function
+<span class='line'>285</span>          * @return {string}
+<span class='line'>286</span>          */</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">        </span><span class="NAME">this.modified</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">modified</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'Last-Modified'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">modified</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">modified</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>292</span> 
 <span class='line'>293</span> 
-<span class='line'>294</span> 
-<span class='line'>295</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>296</span>          * @desc Bind function to remove event. Callbacks consume four parameters:
-<span class='line'>297</span>          * the response body, Etag header (if present), Last-Modofied header
-<span class='line'>298</span>          * (if present) and the jqXHR object.
-<span class='line'>299</span>          * @name Item.onRemove
-<span class='line'>300</span>          * @function
-<span class='line'>301</span>          * @param {func} func
-<span class='line'>302</span>          * @returns {Item} This item, for chaining purposes
-<span class='line'>303</span>          */</span><span class="WHIT">
-<span class='line'>304</span> </span><span class="WHIT">        </span><span class="NAME">this.onRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>305</span> </span><span class="WHIT">            </span><span class="NAME">this.removeCallbacks.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>306</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>307</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>295</span>          * @desc Bind function to write event. Callbacks consume four parameters:
+<span class='line'>296</span>          * the response body, Etag header (if present), Last-Modofied header
+<span class='line'>297</span>          * (if present) and the jqXHR object.
+<span class='line'>298</span>          * @name Item.onWrite
+<span class='line'>299</span>          * @function
+<span class='line'>300</span>          * @param {func} func
+<span class='line'>301</span>          * @returns {Item} This item, for chaining purposes
+<span class='line'>302</span>          */</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">        </span><span class="NAME">this.onWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">            </span><span class="NAME">this.writeCallbacks.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>307</span> 
 <span class='line'>308</span> 
-<span class='line'>309</span> 
-<span class='line'>310</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>311</span>          * @desc Fire a write event. Does not send requests or affect cache content.
-<span class='line'>312</span>          * @name Item.triggerWrite
-<span class='line'>313</span>          * @function
-<span class='line'>314</span>          * @returns {Item} This item, for chaining purposes
-<span class='line'>315</span>          */</span><span class="WHIT">
-<span class='line'>316</span> </span><span class="WHIT">        </span><span class="NAME">this.triggerWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>317</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>318</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.writeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>319</span> </span><span class="WHIT">                </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>320</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>321</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>322</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>310</span>          * @desc Bind function to remove event. Callbacks consume four parameters:
+<span class='line'>311</span>          * the response body, Etag header (if present), Last-Modofied header
+<span class='line'>312</span>          * (if present) and the jqXHR object.
+<span class='line'>313</span>          * @name Item.onRemove
+<span class='line'>314</span>          * @function
+<span class='line'>315</span>          * @param {func} func
+<span class='line'>316</span>          * @returns {Item} This item, for chaining purposes
+<span class='line'>317</span>          */</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">        </span><span class="NAME">this.onRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">            </span><span class="NAME">this.removeCallbacks.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>322</span> 
 <span class='line'>323</span> 
-<span class='line'>324</span> 
-<span class='line'>325</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>326</span>          * @desc Fire a remove event. Does not send requests or affect cache content.
-<span class='line'>327</span>          * @name Item.triggerRemove
-<span class='line'>328</span>          * @function
-<span class='line'>329</span>          * @returns {Item} This item, for chaining purposes
-<span class='line'>330</span>          */</span><span class="WHIT">
-<span class='line'>331</span> </span><span class="WHIT">        </span><span class="NAME">this.triggerRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>332</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>333</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.removeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>334</span> </span><span class="WHIT">                </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>335</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>336</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>337</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>325</span>          * @desc Fire a write event. Does not send requests or affect cache content.
+<span class='line'>326</span>          * @name Item.triggerWrite
+<span class='line'>327</span>          * @function
+<span class='line'>328</span>          * @returns {Item} This item, for chaining purposes
+<span class='line'>329</span>          */</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">        </span><span class="NAME">this.triggerWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.writeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">                </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>337</span> 
 <span class='line'>338</span> 
-<span class='line'>339</span> 
-<span class='line'>340</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>341</span>          * @desc Write new content to item. Triggers write event. Sets
-<span class='line'>342</span>          * autoUpdate to true, enabling this item to be updated on updateAll
-<span class='line'>343</span>          * @name Item.write
-<span class='line'>344</span>          * @function
-<span class='line'>345</span>          * @param {mixed} data
-<span class='line'>346</span>          * @param {jqXHR} jqXHR
-<span class='line'>347</span>          * @returns {Item} This item, for chaining purposes
-<span class='line'>348</span>          */</span><span class="WHIT">
-<span class='line'>349</span> </span><span class="WHIT">        </span><span class="NAME">this.write</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>350</span> </span><span class="WHIT">            </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>351</span> </span><span class="WHIT">            </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>352</span> </span><span class="WHIT">            </span><span class="NAME">this.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>353</span> </span><span class="WHIT">            </span><span class="NAME">this.triggerWrite</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>354</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>355</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>356</span> 
-<span class='line'>357</span> 
-<span class='line'>358</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>359</span>          * @desc Remove item from cache
-<span class='line'>360</span>          * @name Item.remove
-<span class='line'>361</span>          * @function
-<span class='line'>362</span>          * @returns {void}
-<span class='line'>363</span>          */</span><span class="WHIT">
-<span class='line'>364</span> </span><span class="WHIT">        </span><span class="NAME">this.remove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>365</span> </span><span class="WHIT">            </span><span class="NAME">this.triggerRemove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>366</span> </span><span class="WHIT">            </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">$.rcache.cache</span><span class="PUNC">[</span><span class="NAME">this.url</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>367</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>368</span> 
-<span class='line'>369</span> 
-<span class='line'>370</span> </span><span class="WHIT">        </span><span class="COMM">/* AJAX */</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>340</span>          * @desc Fire a remove event. Does not send requests or affect cache content.
+<span class='line'>341</span>          * @name Item.triggerRemove
+<span class='line'>342</span>          * @function
+<span class='line'>343</span>          * @returns {Item} This item, for chaining purposes
+<span class='line'>344</span>          */</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">        </span><span class="NAME">this.triggerRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.removeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">                </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>352</span> 
+<span class='line'>353</span> 
+<span class='line'>354</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>355</span>          * @desc Write new content to item. Triggers write event. Sets
+<span class='line'>356</span>          * autoUpdate to true, enabling this item to be updated on updateAll
+<span class='line'>357</span>          * @name Item.write
+<span class='line'>358</span>          * @function
+<span class='line'>359</span>          * @param {mixed} data
+<span class='line'>360</span>          * @param {jqXHR} jqXHR
+<span class='line'>361</span>          * @returns {Item} This item, for chaining purposes
+<span class='line'>362</span>          */</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">        </span><span class="NAME">this.write</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>364</span> </span><span class="WHIT">            </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">            </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>366</span> </span><span class="WHIT">            </span><span class="NAME">this.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>367</span> </span><span class="WHIT">            </span><span class="NAME">this.triggerWrite</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>368</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>369</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>370</span> 
 <span class='line'>371</span> 
-<span class='line'>372</span> 
-<span class='line'>373</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>374</span>          * @desc If item is not in cache a http GET request is sent. If item is
-<span class='line'>375</span>          * already in cache the previous jqXHR object is returned.
-<span class='line'>376</span>          * @name Item.get
-<span class='line'>377</span>          * @function
-<span class='line'>378</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>379</span>          * @returns {jqXHR}
-<span class='line'>380</span>          */</span><span class="WHIT">
-<span class='line'>381</span> </span><span class="WHIT">        </span><span class="NAME">this.get</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>382</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">this.hasData</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>383</span> </span><span class="WHIT">                
-<span class='line'>384</span>                 </span><span class="COMM">//Perform update in the background</span><span class="WHIT">
-<span class='line'>385</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">$.rcache.settings</span><span class="PUNC">[</span><span class="STRN">'update-on-read'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>386</span> </span><span class="WHIT">                    </span><span class="NAME">this.update</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>387</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>388</span> </span><span class="WHIT">                
-<span class='line'>389</span>                 </span><span class="COMM">//Return jqXHR of item already in cache</span><span class="WHIT">
-<span class='line'>390</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>391</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>392</span> </span><span class="WHIT">                </span><span class="COMM">//Create new ajax request</span><span class="WHIT">
-<span class='line'>393</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.forceGet</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>394</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>395</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>396</span> 
-<span class='line'>397</span> 
-<span class='line'>398</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>399</span>          * @desc Perform a conditional http GET request. If resource have
-<span class='line'>400</span>          * been updated changes are written to the cache.
-<span class='line'>401</span>          * @name Item.update
-<span class='line'>402</span>          * @function
-<span class='line'>403</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>404</span>          * @returns {jqXHR}
-<span class='line'>405</span>          */</span><span class="WHIT">
-<span class='line'>406</span> </span><span class="WHIT">        </span><span class="NAME">this.update</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>407</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>408</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'GET'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>409</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>410</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>411</span> </span><span class="WHIT">                    </span><span class="STRN">'If-None-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>412</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Modified-Since'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>413</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>414</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>415</span> 
-<span class='line'>416</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">opts.headers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>417</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">opts.headers</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>418</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>419</span> 
-<span class='line'>420</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>421</span> 
-<span class='line'>422</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>423</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>424</span> 
-<span class='line'>425</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>426</span> </span><span class="WHIT">                </span><span class="COMM">//Write to item on success</span><span class="WHIT">
-<span class='line'>427</span> </span><span class="WHIT">                </span><span class="COMM">//304 == Not Modified</span><span class="WHIT">
-<span class='line'>428</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>429</span> </span><span class="WHIT">                    </span><span class="NAME">item.write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>430</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>431</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>432</span> 
-<span class='line'>433</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.fail</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>434</span> </span><span class="WHIT">                </span><span class="COMM">//Remove item on response 404</span><span class="WHIT">
-<span class='line'>435</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">404</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>436</span> </span><span class="WHIT">                    </span><span class="NAME">item.remove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>437</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>438</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>439</span> 
-<span class='line'>440</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>441</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>442</span> 
-<span class='line'>443</span> 
-<span class='line'>444</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>445</span>          * @desc Force a http GET request, even if item is in cache
-<span class='line'>446</span>          * @name Item.forceGet
-<span class='line'>447</span>          * @function
-<span class='line'>448</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>449</span>          * @returns {jqXHR}
-<span class='line'>450</span>          */</span><span class="WHIT">
-<span class='line'>451</span> </span><span class="WHIT">        </span><span class="NAME">this.forceGet</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>452</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>453</span> 
-<span class='line'>454</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>455</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'GET'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>456</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>457</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>458</span> </span><span class="WHIT">                    </span><span class="STRN">'If-None-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>459</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Modified'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>460</span> </span><span class="WHIT">                    </span><span class="STRN">'Cache-Control'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'no-cache'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>461</span> </span><span class="WHIT">                    </span><span class="STRN">'Pragma'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'no-cache'</span><span class="WHIT">
-<span class='line'>462</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>463</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>464</span> 
-<span class='line'>465</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>466</span> 
-<span class='line'>467</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>468</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>373</span>          * @desc Remove item from cache
+<span class='line'>374</span>          * @name Item.remove
+<span class='line'>375</span>          * @function
+<span class='line'>376</span>          * @returns {void}
+<span class='line'>377</span>          */</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">        </span><span class="NAME">this.remove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>379</span> </span><span class="WHIT">            </span><span class="NAME">this.triggerRemove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>380</span> </span><span class="WHIT">            </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">$.rcache.cache</span><span class="PUNC">[</span><span class="NAME">this.url</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>381</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>382</span> 
+<span class='line'>383</span> 
+<span class='line'>384</span> </span><span class="WHIT">        </span><span class="COMM">/* AJAX */</span><span class="WHIT">
+<span class='line'>385</span> 
+<span class='line'>386</span> 
+<span class='line'>387</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>388</span>          * @desc If item is not in cache a http GET request is sent. If item is
+<span class='line'>389</span>          * already in cache the previous jqXHR object is returned.
+<span class='line'>390</span>          * @name Item.get
+<span class='line'>391</span>          * @function
+<span class='line'>392</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>393</span>          * @returns {jqXHR}
+<span class='line'>394</span>          */</span><span class="WHIT">
+<span class='line'>395</span> </span><span class="WHIT">        </span><span class="NAME">this.get</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">this.hasData</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">                </span><span class="COMM">// Perform update in the background</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">$.rcache.settings</span><span class="PUNC">[</span><span class="STRN">'update-on-read'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>399</span> </span><span class="WHIT">                    </span><span class="NAME">this.update</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>400</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">                </span><span class="COMM">// Return jqXHR of item already in cache</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>404</span> </span><span class="WHIT">                </span><span class="COMM">// Create new ajax request</span><span class="WHIT">
+<span class='line'>405</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.forceGet</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>406</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>407</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>408</span> 
+<span class='line'>409</span> 
+<span class='line'>410</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>411</span>          * @desc Perform a conditional http GET request. If resource have
+<span class='line'>412</span>          * been updated changes are written to the cache.
+<span class='line'>413</span>          * @name Item.update
+<span class='line'>414</span>          * @function
+<span class='line'>415</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>416</span>          * @returns {jqXHR}
+<span class='line'>417</span>          */</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="WHIT">        </span><span class="NAME">this.update</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>420</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'GET'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>422</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>423</span> </span><span class="WHIT">                    </span><span class="STRN">'If-None-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>424</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Modified-Since'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>425</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>426</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>427</span> 
+<span class='line'>428</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">opts.headers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>429</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">opts.headers</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>431</span> 
+<span class='line'>432</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>433</span> 
+<span class='line'>434</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>435</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>436</span> 
+<span class='line'>437</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>438</span> </span><span class="WHIT">                </span><span class="COMM">// Write to item on success</span><span class="WHIT">
+<span class='line'>439</span> </span><span class="WHIT">                </span><span class="COMM">// 304 == Not Modified</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>441</span> </span><span class="WHIT">                    </span><span class="NAME">item.write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>442</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>443</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>444</span> 
+<span class='line'>445</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>447</span> 
+<span class='line'>448</span> 
+<span class='line'>449</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>450</span>          * @desc Force a http GET request, even if item is in cache
+<span class='line'>451</span>          * @name Item.forceGet
+<span class='line'>452</span>          * @function
+<span class='line'>453</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>454</span>          * @returns {jqXHR}
+<span class='line'>455</span>          */</span><span class="WHIT">
+<span class='line'>456</span> </span><span class="WHIT">        </span><span class="NAME">this.forceGet</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>457</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>458</span> 
+<span class='line'>459</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>460</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'GET'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>461</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>463</span> </span><span class="WHIT">                    </span><span class="STRN">'If-None-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>464</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Modified'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>465</span> </span><span class="WHIT">                    </span><span class="STRN">'Cache-Control'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'no-cache'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>466</span> </span><span class="WHIT">                    </span><span class="STRN">'Pragma'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'no-cache'</span><span class="WHIT">
+<span class='line'>467</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>469</span> 
-<span class='line'>470</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>471</span> </span><span class="WHIT">                </span><span class="COMM">//Write to item on success</span><span class="WHIT">
-<span class='line'>472</span> </span><span class="WHIT">                </span><span class="NAME">item.write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>473</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>470</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>471</span> 
+<span class='line'>472</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>473</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>474</span> 
-<span class='line'>475</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>476</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>477</span> 
-<span class='line'>478</span> 
-<span class='line'>479</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>480</span>          * @desc Delete item using http DELETE and remove from cache
-<span class='line'>481</span>          * @name Item.del
-<span class='line'>482</span>          * @function
-<span class='line'>483</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>484</span>          * @returns {jqXHR}
-<span class='line'>485</span>          */</span><span class="WHIT">
-<span class='line'>486</span> </span><span class="WHIT">        </span><span class="NAME">this.del</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>487</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>488</span> 
-<span class='line'>489</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>490</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'DELETE'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>491</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>492</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>493</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>494</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Unmodified-Since'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>495</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>496</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>497</span> 
-<span class='line'>498</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">opts.headers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>499</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">opts.headers</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>500</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>501</span> 
-<span class='line'>502</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>503</span> </span><span class="WHIT">     
-<span class='line'>504</span>             </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>505</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>506</span> 
-<span class='line'>507</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>508</span> </span><span class="WHIT">                </span><span class="COMM">//Remove from cache on success</span><span class="WHIT">
-<span class='line'>509</span> </span><span class="WHIT">                </span><span class="NAME">item.remove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>510</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>511</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>512</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>475</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">                </span><span class="COMM">// Write to item on success</span><span class="WHIT">
+<span class='line'>477</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">                    </span><span class="NAME">item.write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>479</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>480</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>481</span> 
+<span class='line'>482</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>484</span> 
+<span class='line'>485</span> 
+<span class='line'>486</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>487</span>          * @desc Delete item using http DELETE and remove from cache
+<span class='line'>488</span>          * @name Item.del
+<span class='line'>489</span>          * @function
+<span class='line'>490</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>491</span>          * @returns {jqXHR}
+<span class='line'>492</span>          */</span><span class="WHIT">
+<span class='line'>493</span> </span><span class="WHIT">        </span><span class="NAME">this.del</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>494</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>495</span> 
+<span class='line'>496</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>497</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'DELETE'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Unmodified-Since'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>502</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>503</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>504</span> 
+<span class='line'>505</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">opts.headers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>506</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">opts.headers</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>507</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>508</span> 
+<span class='line'>509</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>510</span> </span><span class="WHIT">     
+<span class='line'>511</span>             </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>512</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>513</span> 
-<span class='line'>514</span> 
-<span class='line'>515</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>516</span>          * @desc Send item using http PUT. If the server returns status code 200
-<span class='line'>517</span>          * (OK) and a response body the returned resource is written to cache.
-<span class='line'>518</span>          * @name Item.put
-<span class='line'>519</span>          * @function
-<span class='line'>520</span>          * @param {mixed} data
-<span class='line'>521</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>522</span>          * @returns {jqXHR}
-<span class='line'>523</span>          */</span><span class="WHIT">
-<span class='line'>524</span> </span><span class="WHIT">        </span><span class="NAME">this.put</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>525</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>526</span> 
-<span class='line'>527</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>528</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'PUT'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>529</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>530</span> </span><span class="WHIT">                </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>531</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>532</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>533</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Unmodified-Since'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>534</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>535</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>536</span> 
-<span class='line'>537</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">opts.headers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>538</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">opts.headers</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>539</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>540</span> 
-<span class='line'>541</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>542</span> 
-<span class='line'>543</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>544</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>514</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>515</span> </span><span class="WHIT">                </span><span class="COMM">// Remove from cache on success</span><span class="WHIT">
+<span class='line'>516</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>517</span> </span><span class="WHIT">                    </span><span class="NAME">item.remove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>518</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>519</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>520</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>521</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>522</span> 
+<span class='line'>523</span> 
+<span class='line'>524</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>525</span>          * @desc Send item using http PUT. If the server returns status code 200
+<span class='line'>526</span>          * (OK) and a response body the returned resource is written to cache.
+<span class='line'>527</span>          * @name Item.put
+<span class='line'>528</span>          * @function
+<span class='line'>529</span>          * @param {mixed} data
+<span class='line'>530</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>531</span>          * @returns {jqXHR}
+<span class='line'>532</span>          */</span><span class="WHIT">
+<span class='line'>533</span> </span><span class="WHIT">        </span><span class="NAME">this.put</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>534</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>535</span> 
+<span class='line'>536</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>537</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'PUT'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>538</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>539</span> </span><span class="WHIT">                </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>540</span> </span><span class="WHIT">                </span><span class="NAME">headers</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>541</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Match'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>542</span> </span><span class="WHIT">                    </span><span class="STRN">'If-Unmodified-Since'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>543</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>544</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>545</span> 
-<span class='line'>546</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>547</span> </span><span class="WHIT">                </span><span class="COMM">//write to cache if these requirements are met</span><span class="WHIT">
-<span class='line'>548</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">body</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>549</span> </span><span class="WHIT">                    </span><span class="NAME">item.write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>550</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>551</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>552</span> 
-<span class='line'>553</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>554</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>555</span> 
-<span class='line'>556</span> 
-<span class='line'>557</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>558</span>          * @desc Send http POST request. If the server returns status code 200
-<span class='line'>559</span>          * (OK) or 201 (created), a response body and a Content-Location header
-<span class='line'>560</span>          * the resource is written to cache. Else if the server returns a
-<span class='line'>561</span>          * Location header a GET request for that url is triggered.
-<span class='line'>562</span>          * @name Item.post
-<span class='line'>563</span>          * @function
-<span class='line'>564</span>          * @param {mixed} data
-<span class='line'>565</span>          * @param {dict} options Additional jQuery.ajax options
-<span class='line'>566</span>          * @returns {jqXHR}
-<span class='line'>567</span>          */</span><span class="WHIT">
-<span class='line'>568</span> </span><span class="WHIT">        </span><span class="NAME">this.post</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>569</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>570</span> 
-<span class='line'>571</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>572</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'POST'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>573</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>574</span> </span><span class="WHIT">                </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT">
-<span class='line'>575</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>576</span> 
-<span class='line'>577</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>578</span> </span><span class="WHIT">     
-<span class='line'>579</span>             </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>580</span> 
-<span class='line'>581</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>582</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">contentLocation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'Content-Location'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>583</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">location</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'Location'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>584</span> 
-<span class='line'>585</span> </span><span class="WHIT">                </span><span class="COMM">//write to cache if these requirements are met</span><span class="WHIT">
-<span class='line'>586</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'>587</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">201</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>588</span> </span><span class="WHIT">                    </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">body</span><span class="WHIT">
-<span class='line'>589</span> </span><span class="WHIT">                    </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">contentLocation</span><span class="WHIT">
-<span class='line'>590</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>591</span> </span><span class="WHIT">                    </span><span class="NAME">$.rcache.item</span><span class="PUNC">(</span><span class="NAME">contentLocation</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>592</span> </span><span class="WHIT">                
-<span class='line'>593</span>                 </span><span class="COMM">//else get a fresh copy</span><span class="WHIT">
-<span class='line'>594</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">location</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>595</span> </span><span class="WHIT">                    </span><span class="NAME">$.rcache.item</span><span class="PUNC">(</span><span class="NAME">location</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">forceGet</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>596</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>597</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>598</span> </span><span class="WHIT">            
-<span class='line'>599</span>             </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>600</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>601</span> 
-<span class='line'>602</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>603</span> 
-<span class='line'>604</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="NAME">jQuery</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>605</span> </span></pre></body></html>
+<span class='line'>546</span> </span><span class="WHIT">            </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">opts.headers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>547</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">opts.headers</span><span class="PUNC">[</span><span class="NAME">index</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>548</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>549</span> 
+<span class='line'>550</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>551</span> 
+<span class='line'>552</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>553</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>554</span> 
+<span class='line'>555</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>556</span> </span><span class="WHIT">                </span><span class="COMM">// Write to cache if these requirements are met</span><span class="WHIT">
+<span class='line'>557</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">body</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>558</span> </span><span class="WHIT">                    </span><span class="NAME">item.write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>559</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>560</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>561</span> 
+<span class='line'>562</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>563</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>564</span> 
+<span class='line'>565</span> 
+<span class='line'>566</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>567</span>          * @desc Send http POST request. If the server returns status code 200
+<span class='line'>568</span>          * (OK) or 201 (created), a response body and a Content-Location header
+<span class='line'>569</span>          * the resource is written to cache. Else if the server returns a
+<span class='line'>570</span>          * Location header a GET request for that url is triggered.
+<span class='line'>571</span>          * @name Item.post
+<span class='line'>572</span>          * @function
+<span class='line'>573</span>          * @param {mixed} data
+<span class='line'>574</span>          * @param {dict} options Additional jQuery.ajax options
+<span class='line'>575</span>          * @returns {jqXHR}
+<span class='line'>576</span>          */</span><span class="WHIT">
+<span class='line'>577</span> </span><span class="WHIT">        </span><span class="NAME">this.post</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>578</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>579</span> 
+<span class='line'>580</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>581</span> </span><span class="WHIT">                </span><span class="NAME">type</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'POST'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>582</span> </span><span class="WHIT">                </span><span class="NAME">url</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.url</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>583</span> </span><span class="WHIT">                </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT">
+<span class='line'>584</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>585</span> 
+<span class='line'>586</span> </span><span class="WHIT">            </span><span class="NAME">$.extend</span><span class="PUNC">(</span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>587</span> </span><span class="WHIT">     
+<span class='line'>588</span>             </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">$.rcache.getJqXHR</span><span class="PUNC">(</span><span class="NAME">opts</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>589</span> 
+<span class='line'>590</span> </span><span class="WHIT">            </span><span class="NAME">jqXHR.done</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">status</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>591</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">contentLocation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'Content-Location'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>592</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">location</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR.getResponseHeader</span><span class="PUNC">(</span><span class="STRN">'Location'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>593</span> 
+<span class='line'>594</span> </span><span class="WHIT">                </span><span class="COMM">// Write to cache if these requirements are met</span><span class="WHIT">
+<span class='line'>595</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>596</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">jqXHR.status</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">201</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>597</span> </span><span class="WHIT">                    </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">body</span><span class="WHIT">
+<span class='line'>598</span> </span><span class="WHIT">                    </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">contentLocation</span><span class="WHIT">
+<span class='line'>599</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>600</span> </span><span class="WHIT">                    </span><span class="NAME">$.rcache.item</span><span class="PUNC">(</span><span class="NAME">contentLocation</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">write</span><span class="PUNC">(</span><span class="NAME">body</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>601</span> </span><span class="WHIT">                
+<span class='line'>602</span>                 </span><span class="COMM">// Else get a fresh copy</span><span class="WHIT">
+<span class='line'>603</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">location</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>604</span> </span><span class="WHIT">                    </span><span class="NAME">$.rcache.item</span><span class="PUNC">(</span><span class="NAME">location</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">forceGet</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>605</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>606</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>607</span> </span><span class="WHIT">            
+<span class='line'>608</span>             </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>609</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>610</span> 
+<span class='line'>611</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>612</span> 
+<span class='line'>613</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="NAME">jQuery</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>614</span> </span></pre></body></html>
