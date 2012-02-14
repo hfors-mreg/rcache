@@ -1,5 +1,5 @@
-rcache: observable and active RESTful cacher for jQuery
-=======================================================
+rcache: observable and active ajax cacher for jQuery
+====================================================
 
 [https://github.com/itbrig/rcache](https://github.com/itbrig/rcache)
 
