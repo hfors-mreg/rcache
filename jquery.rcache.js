@@ -39,7 +39,7 @@
 
         /**
          * @desc rcache settings. See setUp() for altering settings.
-         * @var {dict} settings
+         * @var {object} settings
          */
         this.settings = {
             'update-on-read': true,
@@ -57,7 +57,7 @@
          *     <dd>When the server responds with a 205 Reset content status code
          *     item data is reset to this value. Defaults to {}.</dd>
          * </dl>
-         * @param {dict} settings
+         * @param {object} settings
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
         this.setUp = function(settings){
@@ -71,7 +71,7 @@
 
         /**
          * @desc The internal cache store
-         * @var {dict} cache
+         * @var {object} cache
          */
         this.cache = {};
 
@@ -129,7 +129,7 @@
         /**
          * @desc Update all items in cache where autoUpdate == true, using
          * conditional GET requests
-         * @param {dict} options Additional jQuery.ajax options
+         * @param {object} options Additional jQuery.ajax options
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
         this.updateAll = function(options){
@@ -144,7 +144,7 @@
 
         /**
          * @desc Settings used when creating ajax objects
-         * @var {dict} ajaxOpts
+         * @var {object} ajaxOpts
          */
         this.ajaxOpts = {
             // Default settings goes here ...
@@ -155,7 +155,7 @@
         /**
          * @desc Set default ajax optins. By default rcache requests are created
          * with the 'cache' option set to false.
-         * @param {dict} options
+         * @param {object} options
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
         this.ajaxSetup = function(options){
@@ -168,7 +168,7 @@
          * @desc Internal method to create and fire a jqXHR. On 404 Not Found or
          * 410 Gone responses the cache item is deleted. On 205 Reset Content
          * responses cache item is cleared to setting 'reset-resource-to'.
-         * @param {dict} options
+         * @param {object} options
          * @returns {jqXHR}
          */
         this.getJqXHR = function(options){
@@ -196,6 +196,8 @@
 
     }
 
+
+    // Item internal class
 
 
     /**
@@ -252,362 +254,364 @@
          * @type array
          */
         this.removeCallbacks = [];
+    }
 
 
-        /**
-         * @desc Inspect if item contains data
-         * @name Item.hasData
-         * @function
-         * @returns {bool}
-         */
-        this.hasData = function(){
-            return !!this.data;
-        }
+    // Extending the Item prototype
 
 
-        /**
-         * @desc Get ETag response header
-         * @name Item.etag
-         * @function
-         * @return {string}
-         */
-        this.etag = function(){
-            if ( !this.jqXHR ) return '';
-            var etag = this.jqXHR.getResponseHeader('ETag');
-            return ( etag ) ? etag : '';
-        }
+    /**
+     * @desc Inspect if item contains data
+     * @name Item.hasData
+     * @function
+     * @returns {bool}
+     */
+    Item.prototype.hasData = function(){
+        return !!this.data;
+    }
 
 
-        /**
-         * @desc Get Last-Modified response header
-         * @name Item.modified
-         * @function
-         * @return {string}
-         */
-        this.modified = function(){
-            if ( !this.jqXHR ) return '';
-            var modified = this.jqXHR.getResponseHeader('Last-Modified');
-            return ( modified ) ? modified : '';
-        }
+    /**
+     * @desc Get ETag response header
+     * @name Item.etag
+     * @function
+     * @return {string}
+     */
+    Item.prototype.etag = function(){
+        if ( !this.jqXHR ) return '';
+        var etag = this.jqXHR.getResponseHeader('ETag');
+        return ( etag ) ? etag : '';
+    }
 
 
-        /**
-         * @desc Bind function to write event. Callbacks consume four parameters:
-         * the response body, Etag header (if present), Last-Modofied header
-         * (if present) and the jqXHR object.
-         * @name Item.onWrite
-         * @function
-         * @param {func} func
-         * @returns {Item} This item, for chaining purposes
-         */
-        this.onWrite = function(func){
-            this.writeCallbacks.push(func);
-            return this;
-        }
+    /**
+     * @desc Get Last-Modified response header
+     * @name Item.modified
+     * @function
+     * @return {string}
+     */
+    Item.prototype.modified = function(){
+        if ( !this.jqXHR ) return '';
+        var modified = this.jqXHR.getResponseHeader('Last-Modified');
+        return ( modified ) ? modified : '';
+    }
 
 
-        /**
-         * @desc Bind function to remove event. Callbacks consume four parameters:
-         * the response body, Etag header (if present), Last-Modofied header
-         * (if present) and the jqXHR object.
-         * @name Item.onRemove
-         * @function
-         * @param {func} func
-         * @returns {Item} This item, for chaining purposes
-         */
-        this.onRemove = function(func){
-            this.removeCallbacks.push(func);
-            return this;
-        }
+    /**
+     * @desc Bind function to write event. Callbacks consume four parameters:
+     * the response body, Etag header (if present), Last-Modofied header
+     * (if present) and the jqXHR object.
+     * @name Item.onWrite
+     * @function
+     * @param {func} func
+     * @returns {Item} This item, for chaining purposes
+     */
+    Item.prototype.onWrite = function(func){
+        this.writeCallbacks.push(func);
+        return this;
+    }
 
 
-        /**
-         * @desc Fire a write event. Does not send requests or affect cache content.
-         * @name Item.triggerWrite
-         * @function
-         * @returns {Item} This item, for chaining purposes
-         */
-        this.triggerWrite = function(){
-            var item = this;
-            $.each(this.writeCallbacks, function(index, func){
-                func(item.data, item.etag(), item.modified(), item.jqXHR);
-            });
-            return this;
-        }
+    /**
+     * @desc Bind function to remove event. Callbacks consume four parameters:
+     * the response body, Etag header (if present), Last-Modofied header
+     * (if present) and the jqXHR object.
+     * @name Item.onRemove
+     * @function
+     * @param {func} func
+     * @returns {Item} This item, for chaining purposes
+     */
+    Item.prototype.onRemove = function(func){
+        this.removeCallbacks.push(func);
+        return this;
+    }
 
 
-        /**
-         * @desc Fire a remove event. Does not send requests or affect cache content.
-         * @name Item.triggerRemove
-         * @function
-         * @returns {Item} This item, for chaining purposes
-         */
-        this.triggerRemove = function(){
-            var item = this;
-            $.each(this.removeCallbacks, function(index, func){
-                func(item.data, item.etag(), item.modified(), item.jqXHR);
-            });
-            return this;
-        }
+    /**
+     * @desc Fire a write event. Does not send requests or affect cache content.
+     * @name Item.triggerWrite
+     * @function
+     * @returns {Item} This item, for chaining purposes
+     */
+    Item.prototype.triggerWrite = function(){
+        var item = this;
+        $.each(this.writeCallbacks, function(index, func){
+            func(item.data, item.etag(), item.modified(), item.jqXHR);
+        });
+        return this;
+    }
 
 
-        /**
-         * @desc Write new content to item. Triggers write event. Sets
-         * autoUpdate to true, enabling this item to be updated on updateAll
-         * @name Item.write
-         * @function
-         * @param {mixed} data
-         * @param {jqXHR} jqXHR
-         * @returns {Item} This item, for chaining purposes
-         */
-        this.write = function(data, jqXHR){
-            this.data = data;
-            this.jqXHR = jqXHR;
-            this.autoUpdate = true;
-            this.triggerWrite();
-            return this;
-        }
+    /**
+     * @desc Fire a remove event. Does not send requests or affect cache content.
+     * @name Item.triggerRemove
+     * @function
+     * @returns {Item} This item, for chaining purposes
+     */
+    Item.prototype.triggerRemove = function(){
+        var item = this;
+        $.each(this.removeCallbacks, function(index, func){
+            func(item.data, item.etag(), item.modified(), item.jqXHR);
+        });
+        return this;
+    }
 
 
-        /**
-         * @desc Remove item from cache
-         * @name Item.remove
-         * @function
-         * @returns {void}
-         */
-        this.remove = function(){
-            this.triggerRemove();
-            delete $.rcache.cache[this.url];
-        }
+    /**
+     * @desc Write new content to item. Triggers write event. Sets
+     * autoUpdate to true, enabling this item to be updated on updateAll
+     * @name Item.write
+     * @function
+     * @param {mixed} data
+     * @param {jqXHR} jqXHR
+     * @returns {Item} This item, for chaining purposes
+     */
+    Item.prototype.write = function(data, jqXHR){
+        this.data = data;
+        this.jqXHR = jqXHR;
+        this.autoUpdate = true;
+        this.triggerWrite();
+        return this;
+    }
 
 
-        /* AJAX */
+    /**
+     * @desc Remove item from cache
+     * @name Item.remove
+     * @function
+     * @returns {void}
+     */
+    Item.prototype.remove = function(){
+        this.triggerRemove();
+        delete $.rcache.cache[this.url];
+    }
 
 
-        /**
-         * @desc If item is not in cache a http GET request is sent. If item is
-         * already in cache the previous jqXHR object is returned.
-         * @name Item.get
-         * @function
-         * @param {dict} options Additional jQuery.ajax options
-         * @returns {jqXHR}
-         */
-        this.get = function(options){
-            if ( this.hasData() && this.jqXHR ) {
-                // Perform update in the background
-                if ( $.rcache.settings['update-on-read'] ) {
-                    this.update(options);
-                }
-                // Return jqXHR of item already in cache
-                return this.jqXHR;
-            } else {
-                // Create new ajax request
-                return this.forceGet(options);
+    // AJAX
+
+
+    /**
+     * @desc If item is not in cache a http GET request is sent. If item is
+     * already in cache the previous jqXHR object is returned.
+     * @name Item.get
+     * @function
+     * @param {object} options Additional jQuery.ajax options
+     * @returns {jqXHR}
+     */
+    Item.prototype.get = function(options){
+        if ( this.hasData() && this.jqXHR ) {
+            // Perform update in the background
+            if ( $.rcache.settings['update-on-read'] ) {
+                this.update(options);
             }
+            // Return jqXHR of item already in cache
+            return this.jqXHR;
+        } else {
+            // Create new ajax request
+            return this.forceGet(options);
         }
+    }
 
 
-        /**
-         * @desc Perform a conditional http GET request. If resource have
-         * been updated changes are written to the cache.
-         * @name Item.update
-         * @function
-         * @param {dict} options Additional jQuery.ajax options
-         * @returns {jqXHR}
-         */
-        this.update = function(options){
-            var opts = {
-                type: 'GET',
-                url: this.url,
-                headers: {
-                    'If-None-Match': this.etag(),
-                    'If-Modified-Since': this.modified(),
-                }
-            };
+    /**
+     * @desc Perform a conditional http GET request. If resource have
+     * been updated changes are written to the cache.
+     * @name Item.update
+     * @function
+     * @param {object} options Additional jQuery.ajax options
+     * @returns {jqXHR}
+     */
+    Item.prototype.update = function(options){
+        var opts = {
+            type: 'GET',
+            url: this.url,
+            headers: {
+                'If-None-Match': this.etag(),
+                'If-Modified-Since': this.modified(),
+            }
+        };
 
-            $.each(opts.headers, function(index, value){
-                if ( !value ) delete opts.headers[index];
-            });
+        $.each(opts.headers, function(index, value){
+            if ( !value ) delete opts.headers[index];
+        });
 
-            $.extend(true, opts, options);
+        $.extend(true, opts, options);
 
-            var jqXHR = $.rcache.getJqXHR(opts);
-            var item = this;
+        var jqXHR = $.rcache.getJqXHR(opts);
+        var item = this;
 
-            jqXHR.done(function(body, status, jqXHR){
-                // Write to item on success
-                // 304 == Not Modified
-                if ( jqXHR.status == 200 ) {
-                    item.write(body, jqXHR);
-                }
-            });
+        jqXHR.done(function(body, status, jqXHR){
+            // Write to item on success
+            // 304 == Not Modified
+            if ( jqXHR.status == 200 ) {
+                item.write(body, jqXHR);
+            }
+        });
 
-            return jqXHR;
-        }
-
-
-        /**
-         * @desc Force a http GET request, even if item is in cache
-         * @name Item.forceGet
-         * @function
-         * @param {dict} options Additional jQuery.ajax options
-         * @returns {jqXHR}
-         */
-        this.forceGet = function(options){
-            if ( !options ) options = {};
-
-            var opts = {
-                type: 'GET',
-                url: this.url,
-                headers: {
-                    'If-None-Match': '',
-                    'If-Modified': '',
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache'
-                }
-            };
-
-            $.extend(true, opts, options);
-
-            var jqXHR = $.rcache.getJqXHR(opts);
-            var item = this;
-
-            jqXHR.done(function(body, status, jqXHR){
-                // Write to item on success
-                if ( jqXHR.status == 200 ) {
-                    item.write(body, jqXHR);
-                }
-            });
-
-            return jqXHR;
-        }
+        return jqXHR;
+    }
 
 
-        /**
-         * @desc Delete item using http DELETE and remove from cache
-         * @name Item.del
-         * @function
-         * @param {dict} options Additional jQuery.ajax options
-         * @returns {jqXHR}
-         */
-        this.del = function(options){
-            if ( !options ) options = {};
+    /**
+     * @desc Force a http GET request, even if item is in cache
+     * @name Item.forceGet
+     * @function
+     * @param {object} options Additional jQuery.ajax options
+     * @returns {jqXHR}
+     */
+    Item.prototype.forceGet = function(options){
+        if ( !options ) options = {};
 
-            var opts = {
-                type: 'DELETE',
-                url: this.url,
-                headers: {
-                    'If-Match': this.etag(),
-                    'If-Unmodified-Since': this.modified(),
-                }
-            };
+        var opts = {
+            type: 'GET',
+            url: this.url,
+            headers: {
+                'If-None-Match': '',
+                'If-Modified': '',
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        };
 
-            $.each(opts.headers, function(index, value){
-                if ( !value ) delete opts.headers[index];
-            });
+        $.extend(true, opts, options);
 
-            $.extend(true, opts, options);
-     
-            var jqXHR = $.rcache.getJqXHR(opts);
-            var item = this;
+        var jqXHR = $.rcache.getJqXHR(opts);
+        var item = this;
 
-            jqXHR.done(function(body, status, jqXHR){
-                // Remove from cache on success
-                if ( jqXHR.status == 200 ) {
-                    item.remove();
-                }
-            });
-            return jqXHR;
-        }
+        jqXHR.done(function(body, status, jqXHR){
+            // Write to item on success
+            if ( jqXHR.status == 200 ) {
+                item.write(body, jqXHR);
+            }
+        });
 
-
-        /**
-         * @desc Send item using http PUT. If the server returns status code 200
-         * (OK) and a response body the returned resource is written to cache.
-         * @name Item.put
-         * @function
-         * @param {mixed} data
-         * @param {dict} options Additional jQuery.ajax options
-         * @returns {jqXHR}
-         */
-        this.put = function(data, options){
-            if ( !options ) options = {};
-
-            var opts = {
-                type: 'PUT',
-                url: this.url,
-                data: data,
-                headers: {
-                    'If-Match': this.etag(),
-                    'If-Unmodified-Since': this.modified(),
-                }
-            };
-
-            $.each(opts.headers, function(index, value){
-                if ( !value ) delete opts.headers[index];
-            });
-
-            $.extend(true, opts, options);
-
-            var jqXHR = $.rcache.getJqXHR(opts);
-            var item = this;
-
-            jqXHR.done(function(body, status, jqXHR){
-                // Write to cache if these requirements are met
-                if ( jqXHR.status == 200 && body ) {
-                    item.write(body, jqXHR);
-                }
-            });
-
-            return jqXHR;
-        }
+        return jqXHR;
+    }
 
 
-        /**
-         * @desc Send http POST request. If the server returns status code 200
-         * (OK) or 201 (created), a response body and a Content-Location header
-         * the resource is written to cache. Else if the server returns a
-         * Location header a GET request for that url is triggered.
-         * @name Item.post
-         * @function
-         * @param {mixed} data
-         * @param {dict} options Additional jQuery.ajax options
-         * @returns {jqXHR}
-         */
-        this.post = function(data, options){
-            if ( !options ) options = {};
+    /**
+     * @desc Delete item using http DELETE and remove from cache
+     * @name Item.del
+     * @function
+     * @param {object} options Additional jQuery.ajax options
+     * @returns {jqXHR}
+     */
+    Item.prototype.del = function(options){
+        if ( !options ) options = {};
 
-            var opts = {
-                type: 'POST',
-                url: this.url,
-                data: data
-            };
+        var opts = {
+            type: 'DELETE',
+            url: this.url,
+            headers: {
+                'If-Match': this.etag(),
+                'If-Unmodified-Since': this.modified(),
+            }
+        };
 
-            $.extend(true, opts, options);
-     
-            var jqXHR = $.rcache.getJqXHR(opts);
+        $.each(opts.headers, function(index, value){
+            if ( !value ) delete opts.headers[index];
+        });
 
-            jqXHR.done(function(body, status, jqXHR){
-                var contentLocation = jqXHR.getResponseHeader('Content-Location');
-                var location = jqXHR.getResponseHeader('Location');
+        $.extend(true, opts, options);
+ 
+        var jqXHR = $.rcache.getJqXHR(opts);
+        var item = this;
 
-                // Write to cache if these requirements are met
-                if (
-                    (jqXHR.status == 200 || jqXHR.status == 201)
-                    && body
-                    && contentLocation
-                ) {
-                    $.rcache.item(contentLocation).write(body, jqXHR);
-                
-                // Else get a fresh copy
-                } else if ( location ) {
-                    $.rcache.item(location).forceGet();
-                }
-            });
+        jqXHR.done(function(body, status, jqXHR){
+            // Remove from cache on success
+            if ( jqXHR.status == 200 ) {
+                item.remove();
+            }
+        });
+        return jqXHR;
+    }
+
+
+    /**
+     * @desc Send item using http PUT. If the server returns status code 200
+     * (OK) and a response body the returned resource is written to cache.
+     * @name Item.put
+     * @function
+     * @param {mixed} data
+     * @param {object} options Additional jQuery.ajax options
+     * @returns {jqXHR}
+     */
+    Item.prototype.put = function(data, options){
+        if ( !options ) options = {};
+
+        var opts = {
+            type: 'PUT',
+            url: this.url,
+            data: data,
+            headers: {
+                'If-Match': this.etag(),
+                'If-Unmodified-Since': this.modified(),
+            }
+        };
+
+        $.each(opts.headers, function(index, value){
+            if ( !value ) delete opts.headers[index];
+        });
+
+        $.extend(true, opts, options);
+
+        var jqXHR = $.rcache.getJqXHR(opts);
+        var item = this;
+
+        jqXHR.done(function(body, status, jqXHR){
+            // Write to cache if these requirements are met
+            if ( jqXHR.status == 200 && body ) {
+                item.write(body, jqXHR);
+            }
+        });
+
+        return jqXHR;
+    }
+
+
+    /**
+     * @desc Send http POST request. If the server returns status code 200
+     * (OK) or 201 (created), a response body and a Content-Location header
+     * the resource is written to cache. Else if the server returns a
+     * Location header a GET request for that url is triggered.
+     * @name Item.post
+     * @function
+     * @param {mixed} data
+     * @param {object} options Additional jQuery.ajax options
+     * @returns {jqXHR}
+     */
+    Item.prototype.post = function(data, options){
+        if ( !options ) options = {};
+
+        var opts = {
+            type: 'POST',
+            url: this.url,
+            data: data
+        };
+
+        $.extend(true, opts, options);
+ 
+        var jqXHR = $.rcache.getJqXHR(opts);
+
+        jqXHR.done(function(body, status, jqXHR){
+            var contentLocation = jqXHR.getResponseHeader('Content-Location');
+            var location = jqXHR.getResponseHeader('Location');
+
+            // Write to cache if these requirements are met
+            if (
+                (jqXHR.status == 200 || jqXHR.status == 201)
+                && body
+                && contentLocation
+            ) {
+                $.rcache.item(contentLocation).write(body, jqXHR);
             
-            return jqXHR;
-        }
-
+            // Else get a fresh copy
+            } else if ( location ) {
+                $.rcache.item(location).forceGet();
+            }
+        });
+        
+        return jqXHR;
     }
 
 })(jQuery);
