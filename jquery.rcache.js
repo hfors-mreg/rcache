@@ -519,7 +519,7 @@
 
         jqXHR.done(function(body, status, jqXHR){
             // Remove from cache on success
-            if ( jqXHR.status == 200 ) {
+            if ( jqXHR.status == 200 || jqXHR.status == 204 ) {
                 item.remove();
             }
         });
