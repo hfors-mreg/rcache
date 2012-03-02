@@ -44,18 +44,21 @@
         this.settings = {
             'update-on-read': true,
             'reset-resource-to': {},
+            'max-size': 50
         };
 
 
         /**
          * @desc Set rcache settings. The following settings are available:
          * <dl>
-         *     <dt>update-on-read</dt>
-         *     <dd>Boolean. Send conditional get requests in the
-         *     background on cache reads? Deafaults to true.</dd>
-         *     <dt>reset-resource-to</dt>
-         *     <dd>When the server responds with a 205 Reset content status code
-         *     item data is reset to this value. Defaults to {}.</dd>
+         *  <dt>update-on-read</dt>
+         *      <dd>Boolean. Send conditional get requests in the
+         *      background on cache reads? Deafaults to true.</dd>
+         *  <dt>reset-resource-to</dt>
+         *      <dd>When the server responds with a 205 Reset content status code
+         *      item data is reset to this value. Defaults to {}.</dd>
+         *  <dt>max-size</dt>
+         *      <dd>Cache max size.</dd>
          * </dl>
          * @param {object} settings
          * @returns {$.rcache} Return rcache instance for chaining purposes
@@ -107,9 +110,44 @@
          */
         this.item = function(key){
             if ( !this.has(key) ) {
-                this.cache[key] = new Item(key);
+                this.cache[key] = {
+                    item: new Item(key),
+                    time: Date.now()
+                };
+                // Garbage collect if cache is to large
+                if ( this.count() > this.settings['max-size'] ) {
+                    this.gc();
+                }
             }
-            return this.cache[key];
+            // Set access time
+            this.cache[key].time = Date.now();
+            return this.cache[key].item;
+        }
+
+        
+        /**
+         * @desc Garbage collection
+         * @returns {$.rcache} Return rcache instance for chaining purposes
+         */
+        this.gc = function(){
+            var arSort = [];
+
+            $.each(this.cache, function(key, obj) { 
+                arSort.push([obj.time, key]);
+            });
+
+            arSort.sort(function(a, b){
+                return a[0] - b[0];
+            });
+
+            // Remove one fourth of max-size
+            var targetSize = this.settings['max-size'] - Math.round(this.settings['max-size']/4);
+            for ( var i = this.count()-targetSize; i>0; i-- ) {
+                var post = arSort.shift();
+                this.item(post[1]).remove();
+            }
+            
+            return this;
         }
 
 
@@ -133,9 +171,9 @@
          * @returns {$.rcache} Return rcache instance for chaining purposes
          */
         this.updateAll = function(options){
-            $.each(this.cache, function(key, item) { 
-                if ( item.autoUpdate ) {
-                    item.update(options);
+            $.each(this.cache, function(key, obj) {
+                if ( obj.item.autoUpdate ) {
+                    obj.item.update(options);
                 }
             });
             return this;
