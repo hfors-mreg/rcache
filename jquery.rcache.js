@@ -2,7 +2,7 @@
  * Copyright (c) 2012 Hannes Forsgård
  * Licensed under the WTFPL (http://sam.zoy.org/wtfpl/)
  * @fileOverview rcache: observable and active ajax cacher for jQuery
- * @version 1.0.2
+ * @version 1.1.0
  * @requires jQuery
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
