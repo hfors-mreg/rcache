@@ -286,19 +286,19 @@
 <span class='line'>279</span> 
 <span class='line'>280</span> 
 <span class='line'>281</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>282</span>          * @desc Callback functions for write events
-<span class='line'>283</span>          * @name Item.writeCallbacks
+<span class='line'>282</span>          * @desc Observer functions for write events
+<span class='line'>283</span>          * @name Item.writeObservers
 <span class='line'>284</span>          * @type array
 <span class='line'>285</span>          */</span><span class="WHIT">
-<span class='line'>286</span> </span><span class="WHIT">        </span><span class="NAME">this.writeCallbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">        </span><span class="NAME">this.writeObservers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>287</span> </span><span class="WHIT">        
 <span class='line'>288</span> 
 <span class='line'>289</span>         </span><span class="COMM">/**
-<span class='line'>290</span>          * @desc Callback functions for remove events
-<span class='line'>291</span>          * @name Item.removeCallbacks
+<span class='line'>290</span>          * @desc Observer functions for remove events
+<span class='line'>291</span>          * @name Item.removeObservers
 <span class='line'>292</span>          * @type array
 <span class='line'>293</span>          */</span><span class="WHIT">
-<span class='line'>294</span> </span><span class="WHIT">        </span><span class="NAME">this.removeCallbacks</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">        </span><span class="NAME">this.removeObservers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>295</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>296</span> 
 <span class='line'>297</span> 
@@ -343,31 +343,31 @@
 <span class='line'>336</span> 
 <span class='line'>337</span> 
 <span class='line'>338</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>339</span>      * @desc Bind function to write event. Callbacks consume four parameters:
-<span class='line'>340</span>      * the response body, Etag header (if present), Last-Modofied header
-<span class='line'>341</span>      * (if present) and the jqXHR object.
+<span class='line'>339</span>      * @desc Bind function to write event. Observer functions consume four
+<span class='line'>340</span>      * parameters: the response body, Etag header (if present), Last-Modofied
+<span class='line'>341</span>      * header (if present) and the jqXHR object.
 <span class='line'>342</span>      * @name Item.onWrite
 <span class='line'>343</span>      * @function
 <span class='line'>344</span>      * @param {func} func
 <span class='line'>345</span>      * @returns {Item} This item, for chaining purposes
 <span class='line'>346</span>      */</span><span class="WHIT">
 <span class='line'>347</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.onWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>348</span> </span><span class="WHIT">        </span><span class="NAME">this.writeCallbacks.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">        </span><span class="NAME">this.writeObservers.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>349</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>350</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>351</span> 
 <span class='line'>352</span> 
 <span class='line'>353</span> </span><span class="WHIT">    </span><span class="COMM">/**
-<span class='line'>354</span>      * @desc Bind function to remove event. Callbacks consume four parameters:
-<span class='line'>355</span>      * the response body, Etag header (if present), Last-Modofied header
-<span class='line'>356</span>      * (if present) and the jqXHR object.
+<span class='line'>354</span>      * @desc Bind function to remove event. Observer functions consume four
+<span class='line'>355</span>      * parameters: the response body, Etag header (if present), Last-Modofied
+<span class='line'>356</span>      * header (if present) and the jqXHR object.
 <span class='line'>357</span>      * @name Item.onRemove
 <span class='line'>358</span>      * @function
 <span class='line'>359</span>      * @param {func} func
 <span class='line'>360</span>      * @returns {Item} This item, for chaining purposes
 <span class='line'>361</span>      */</span><span class="WHIT">
 <span class='line'>362</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.onRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>363</span> </span><span class="WHIT">        </span><span class="NAME">this.removeCallbacks.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">        </span><span class="NAME">this.removeObservers.push</span><span class="PUNC">(</span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>364</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>365</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>366</span> 
@@ -380,7 +380,7 @@
 <span class='line'>373</span>      */</span><span class="WHIT">
 <span class='line'>374</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.notifyWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>375</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>376</span> </span><span class="WHIT">        </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.writeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">        </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.writeObservers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>377</span> </span><span class="WHIT">            </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>378</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>379</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
@@ -395,7 +395,7 @@
 <span class='line'>388</span>      */</span><span class="WHIT">
 <span class='line'>389</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.notifyRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>390</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>391</span> </span><span class="WHIT">        </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.removeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>391</span> </span><span class="WHIT">        </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.removeObservers</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>392</span> </span><span class="WHIT">            </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>393</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>394</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">

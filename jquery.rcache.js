@@ -279,19 +279,19 @@
 
 
         /**
-         * @desc Callback functions for write events
-         * @name Item.writeCallbacks
+         * @desc Observer functions for write events
+         * @name Item.writeObservers
          * @type array
          */
-        this.writeCallbacks = [];
+        this.writeObservers = [];
         
 
         /**
-         * @desc Callback functions for remove events
-         * @name Item.removeCallbacks
+         * @desc Observer functions for remove events
+         * @name Item.removeObservers
          * @type array
          */
-        this.removeCallbacks = [];
+        this.removeObservers = [];
     }
 
 
@@ -336,31 +336,31 @@
 
 
     /**
-     * @desc Bind function to write event. Callbacks consume four parameters:
-     * the response body, Etag header (if present), Last-Modofied header
-     * (if present) and the jqXHR object.
+     * @desc Bind function to write event. Observer functions consume four
+     * parameters: the response body, Etag header (if present), Last-Modofied
+     * header (if present) and the jqXHR object.
      * @name Item.onWrite
      * @function
      * @param {func} func
      * @returns {Item} This item, for chaining purposes
      */
     Item.prototype.onWrite = function(func){
-        this.writeCallbacks.push(func);
+        this.writeObservers.push(func);
         return this;
     }
 
 
     /**
-     * @desc Bind function to remove event. Callbacks consume four parameters:
-     * the response body, Etag header (if present), Last-Modofied header
-     * (if present) and the jqXHR object.
+     * @desc Bind function to remove event. Observer functions consume four
+     * parameters: the response body, Etag header (if present), Last-Modofied
+     * header (if present) and the jqXHR object.
      * @name Item.onRemove
      * @function
      * @param {func} func
      * @returns {Item} This item, for chaining purposes
      */
     Item.prototype.onRemove = function(func){
-        this.removeCallbacks.push(func);
+        this.removeObservers.push(func);
         return this;
     }
 
@@ -373,7 +373,7 @@
      */
     Item.prototype.notifyWrite = function(){
         var item = this;
-        $.each(this.writeCallbacks, function(index, func){
+        $.each(this.writeObservers, function(index, func){
             func(item.data, item.etag(), item.modified(), item.jqXHR);
         });
         return this;
@@ -388,7 +388,7 @@
      */
     Item.prototype.notifyRemove = function(){
         var item = this;
-        $.each(this.removeCallbacks, function(index, func){
+        $.each(this.removeObservers, function(index, func){
             func(item.data, item.etag(), item.modified(), item.jqXHR);
         });
         return this;
