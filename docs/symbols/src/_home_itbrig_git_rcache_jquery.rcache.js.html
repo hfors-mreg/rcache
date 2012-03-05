@@ -9,7 +9,7 @@
 <span class='line'>  2</span>  * Copyright (c) 2012 Hannes Forsgård
 <span class='line'>  3</span>  * Licensed under the WTFPL (http://sam.zoy.org/wtfpl/)
 <span class='line'>  4</span>  * @fileOverview rcache: observable and active ajax cacher for jQuery
-<span class='line'>  5</span>  * @version 1.1.0
+<span class='line'>  5</span>  * @version 1.1.1
 <span class='line'>  6</span>  * @requires jQuery
 <span class='line'>  7</span>  * @author Hannes Forsgård &lt;hannes.forsgard@gmail.com>
 <span class='line'>  8</span>  */</span><span class="WHIT">
@@ -374,11 +374,11 @@
 <span class='line'>367</span> 
 <span class='line'>368</span> </span><span class="WHIT">    </span><span class="COMM">/**
 <span class='line'>369</span>      * @desc Fire a write event. Does not send requests or affect cache content.
-<span class='line'>370</span>      * @name Item.triggerWrite
+<span class='line'>370</span>      * @name Item.notifyWrite
 <span class='line'>371</span>      * @function
 <span class='line'>372</span>      * @returns {Item} This item, for chaining purposes
 <span class='line'>373</span>      */</span><span class="WHIT">
-<span class='line'>374</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.triggerWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.notifyWrite</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>375</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>376</span> </span><span class="WHIT">        </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.writeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>377</span> </span><span class="WHIT">            </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
@@ -389,11 +389,11 @@
 <span class='line'>382</span> 
 <span class='line'>383</span> </span><span class="WHIT">    </span><span class="COMM">/**
 <span class='line'>384</span>      * @desc Fire a remove event. Does not send requests or affect cache content.
-<span class='line'>385</span>      * @name Item.triggerRemove
+<span class='line'>385</span>      * @name Item.notifyRemove
 <span class='line'>386</span>      * @function
 <span class='line'>387</span>      * @returns {Item} This item, for chaining purposes
 <span class='line'>388</span>      */</span><span class="WHIT">
-<span class='line'>389</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.triggerRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>389</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.notifyRemove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>390</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">item</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>391</span> </span><span class="WHIT">        </span><span class="NAME">$.each</span><span class="PUNC">(</span><span class="NAME">this.removeCallbacks</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">func</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>392</span> </span><span class="WHIT">            </span><span class="NAME">func</span><span class="PUNC">(</span><span class="NAME">item.data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.etag</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.modified</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">item.jqXHR</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
@@ -415,7 +415,7 @@
 <span class='line'>408</span> </span><span class="WHIT">        </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>409</span> </span><span class="WHIT">        </span><span class="NAME">this.jqXHR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jqXHR</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>410</span> </span><span class="WHIT">        </span><span class="NAME">this.autoUpdate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>411</span> </span><span class="WHIT">        </span><span class="NAME">this.triggerWrite</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>411</span> </span><span class="WHIT">        </span><span class="NAME">this.notifyWrite</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>412</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>413</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>414</span> 
@@ -427,7 +427,7 @@
 <span class='line'>420</span>      * @returns {void}
 <span class='line'>421</span>      */</span><span class="WHIT">
 <span class='line'>422</span> </span><span class="WHIT">    </span><span class="NAME">Item.prototype.remove</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>423</span> </span><span class="WHIT">        </span><span class="NAME">this.triggerRemove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>423</span> </span><span class="WHIT">        </span><span class="NAME">this.notifyRemove</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>424</span> </span><span class="WHIT">        </span><span class="KEYW">delete</span><span class="WHIT"> </span><span class="NAME">$.rcache.cache</span><span class="PUNC">[</span><span class="NAME">this.url</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>425</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>426</span> 

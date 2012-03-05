@@ -2,7 +2,7 @@
  * Copyright (c) 2012 Hannes Forsgård
  * Licensed under the WTFPL (http://sam.zoy.org/wtfpl/)
  * @fileOverview rcache: observable and active ajax cacher for jQuery
- * @version 1.1.0
+ * @version 1.1.1
  * @requires jQuery
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
@@ -367,11 +367,11 @@
 
     /**
      * @desc Fire a write event. Does not send requests or affect cache content.
-     * @name Item.triggerWrite
+     * @name Item.notifyWrite
      * @function
      * @returns {Item} This item, for chaining purposes
      */
-    Item.prototype.triggerWrite = function(){
+    Item.prototype.notifyWrite = function(){
         var item = this;
         $.each(this.writeCallbacks, function(index, func){
             func(item.data, item.etag(), item.modified(), item.jqXHR);
@@ -382,11 +382,11 @@
 
     /**
      * @desc Fire a remove event. Does not send requests or affect cache content.
-     * @name Item.triggerRemove
+     * @name Item.notifyRemove
      * @function
      * @returns {Item} This item, for chaining purposes
      */
-    Item.prototype.triggerRemove = function(){
+    Item.prototype.notifyRemove = function(){
         var item = this;
         $.each(this.removeCallbacks, function(index, func){
             func(item.data, item.etag(), item.modified(), item.jqXHR);
@@ -408,7 +408,7 @@
         this.data = data;
         this.jqXHR = jqXHR;
         this.autoUpdate = true;
-        this.triggerWrite();
+        this.notifyWrite();
         return this;
     }
 
@@ -420,7 +420,7 @@
      * @returns {void}
      */
     Item.prototype.remove = function(){
-        this.triggerRemove();
+        this.notifyRemove();
         delete $.rcache.cache[this.url];
     }
 

@@ -397,6 +397,24 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">Item.<b><a href="../symbols/Item.html#.notifyRemove">notifyRemove</a></b>()
+								</div>
+								<div class="description">Fire a remove event.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">Item.<b><a href="../symbols/Item.html#.notifyWrite">notifyWrite</a></b>()
+								</div>
+								<div class="description">Fire a write event.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">Item.<b><a href="../symbols/Item.html#.onRemove">onRemove</a></b>(func)
 								</div>
 								<div class="description">Bind function to remove event.</div>
@@ -436,24 +454,6 @@ ul.inheritsList
 								<div class="fixedFont">Item.<b><a href="../symbols/Item.html#.remove">remove</a></b>()
 								</div>
 								<div class="description">Remove item from cache</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">Item.<b><a href="../symbols/Item.html#.triggerRemove">triggerRemove</a></b>()
-								</div>
-								<div class="description">Fire a remove event.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">Item.<b><a href="../symbols/Item.html#.triggerWrite">triggerWrite</a></b>()
-								</div>
-								<div class="description">Fire a write event.</div>
 							</td>
 						</tr>
 					
@@ -897,6 +897,70 @@ already in cache the previous jqXHR object is returned.
 
 					<hr />
 				
+					<a name=".notifyRemove"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/Item.html">Item</a>}</span>
+					<span class="light">Item.</span><b>notifyRemove</b>()
+					
+					</div>
+					<div class="description">
+						Fire a remove event. Does not send requests or affect cache content.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Item.html">Item</a>}</span> This item, for chaining purposes</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".notifyWrite"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/Item.html">Item</a>}</span>
+					<span class="light">Item.</span><b>notifyWrite</b>()
+					
+					</div>
+					<div class="description">
+						Fire a write event. Does not send requests or affect cache content.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Item.html">Item</a>}</span> This item, for chaining purposes</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name=".onRemove"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -1121,70 +1185,6 @@ Location header a GET request for that url is triggered.
 
 					<hr />
 				
-					<a name=".triggerRemove"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					<span class="light">{<a href="../symbols/Item.html">Item</a>}</span>
-					<span class="light">Item.</span><b>triggerRemove</b>()
-					
-					</div>
-					<div class="description">
-						Fire a remove event. Does not send requests or affect cache content.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/Item.html">Item</a>}</span> This item, for chaining purposes</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name=".triggerWrite"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					<span class="light">{<a href="../symbols/Item.html">Item</a>}</span>
-					<span class="light">Item.</span><b>triggerWrite</b>()
-					
-					</div>
-					<div class="description">
-						Fire a write event. Does not send requests or affect cache content.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/Item.html">Item</a>}</span> This item, for chaining purposes</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
 					<a name=".update"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -1291,7 +1291,7 @@ autoUpdate to true, enabling this item to be updated on updateAll
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Mar 02 2012 12:00:12 GMT+0100 (CET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Mar 05 2012 14:33:18 GMT+0100 (CET)
 		</div>
 	</body>
 </html>
